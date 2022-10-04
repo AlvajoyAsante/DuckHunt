@@ -1,0 +1,27 @@
+	section .icon
+
+	jp	___prgm_init
+	db	$01
+	public ___icon
+___icon:
+	db	$10, $10
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $7C, $00, $FF, $00, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $FF, $FF, $00, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $FF, $FF, $00, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $FF, $FF, $FF, $00, $7C, $02, $FF, $02, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $FF, $FF, $FF, $7C, $7C, $02, $FF, $02, $EB, $7C, $7C
+	db	$7C, $7C, $7C, $00, $00, $FF, $FF, $00, $00, $FF, $02, $01, $02, $EB, $EB, $7C
+	db	$7C, $7C, $FF, $00, $00, $FF, $FF, $FF, $00, $00, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $FF, $00, $FF, $FF, $FF, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $FF, $FF, $FF, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $EB, $EB, $EB, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $EB, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	db	$7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C, $7C
+	public ___description
+___description:
+	db	"DuckHunt v1.0", 0
+___prgm_init:
