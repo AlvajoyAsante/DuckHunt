@@ -1,4 +1,6 @@
-# DuckHunt ![](https://i.imgur.com/spOGMMq.gif/)
+# DuckHunt 
+
+![](https://i.imgur.com/spOGMMq.gif/)
 
 ![](https://img.shields.io/github/release/Overload02/DuckHunt) ![](https://img.shields.io/github/issues/Overload02/DuckHunt)
 
@@ -7,6 +9,7 @@
 ## Concepts Images
 
 ![](https://i.imgur.com/NqsDMn6.png) ![](https://i.imgur.com/gFsHDo4.png)
+
 ![](https://i.imgur.com/saReUG8.png) ![](https://i.imgur.com/i0hTkjq.png)
 
 ## Development
