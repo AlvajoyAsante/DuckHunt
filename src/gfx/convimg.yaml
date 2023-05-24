@@ -1,0 +1,121 @@
+palettes:
+  - name: palette
+    fixed-entries:
+      # Default Colors
+      - color: { index: 0, r: 255, g: 0, b: 128 } # Transparent color
+      - color: { index: 1, r: 255, g: 255, b: 255 } # White
+      - color: { index: 2, r: 0, g: 0, b: 0 } # Black
+      # Cloud colors
+      - color: { index: 3, r: 99, g: 173, b: 255 } 
+      - color: { index: 4, r: 255, g: 204, b: 197 }
+      - color: { index: 5, r: 74, g: 206, b: 222 }
+      # Ground color
+      - color: { index: 6, r: 255, g: 95, b: 0 }
+      - color: { index: 7, r: 173, g: 173, b: 173 }
+    images: automatic
+
+converts:
+  - name: dog
+    palette: palette
+    transparent-color-index: 0
+    images:
+      - DOG/dog_bird_1.png
+      - DOG/dog_bird_2.png
+      - DOG/dog_jump_1.png
+      - DOG/dog_jump_2.png
+      - DOG/dog_laugh_1.png
+      - DOG/dog_laugh_2.png
+      - DOG/dog_walk_0.png
+      - DOG/dog_walk_1.png
+      - DOG/dog_walk_2.png
+      - DOG/dog_walk_3.png
+      - DOG/dog_walk_4.png
+      - DOG/dog_walk_5.png
+      - DOG/dog_walk_6.png
+
+  - name: ducks
+    palette: palette
+    transparent-color-index: 0
+    images:
+      - DUCKS/Duck_A_1.png
+      - DUCKS/Duck_A_2.png
+      - DUCKS/Duck_A_3.png
+      - DUCKS/Duck_B_1.png
+      - DUCKS/Duck_B_2.png
+      - DUCKS/Duck_B_3.png
+      - DUCKS/Duck_Fall_1.png
+      - DUCKS/Duck_Fall_2.png
+      - DUCKS/Duck_Flyaway_1.png
+      - DUCKS/Duck_Flyaway_2.png
+      - DUCKS/Duck_Flyaway_3.png
+      - DUCKS/Duck_Shot.png
+      # Duck b
+      - DUCKS/Duckb_A_1.png
+      - DUCKS/Duckb_A_2.png
+      - DUCKS/Duckb_A_3.png
+      - DUCKS/Duckb_B_1.png
+      - DUCKS/Duckb_B_2.png
+      - DUCKS/Duckb_B_3.png
+      - DUCKS/Duckb_Fall_1.png
+      - DUCKS/Duckb_Fall_2.png
+      - DUCKS/Duckb_Flyaway_1.png
+      - DUCKS/Duckb_Flyaway_2.png
+      - DUCKS/Duckb_Flyaway_3.png
+      - DUCKS/Duckb_Shot.png
+      # Duck c
+      - DUCKS/Duckc_A_1.png
+      - DUCKS/Duckc_A_2.png
+      - DUCKS/Duckc_A_3.png
+      - DUCKS/Duckc_B_1.png
+      - DUCKS/Duckc_B_2.png
+      - DUCKS/Duckc_B_3.png
+      - DUCKS/Duckc_Fall_1.png
+      - DUCKS/Duckc_Fall_2.png
+      - DUCKS/Duckc_Flyaway_1.png
+      - DUCKS/Duckc_Flyaway_2.png
+      - DUCKS/Duckc_Flyaway_3.png
+      - DUCKS/Duckc_Shot.png
+
+  - name: game
+    palette: palette
+    compress: zx7
+    transparent-color-index: 0
+    images:
+      - GAME/bg_bush.png
+      - GAME/bg_ground.png
+      - GAME/bg_tree.png
+      - GAME/bird_icon.png
+      - GAME/bullet.png
+      - GAME/bullet_board.png
+      - GAME/c_ground.png
+      - GAME/c_mountain.png
+      - GAME/c_panel.png
+      - GAME/crosshair.png
+      - GAME/fly_away.png
+      - GAME/kill_board.png
+      - GAME/pause.png
+      - GAME/score_board.png
+
+  - name: menu
+    palette: palette
+    compress: zx7
+    transparent-color-index: 0
+    images:
+      - MENU/cr_text.png
+      - MENU/game_type_text.png
+      - MENU/game_types.png
+      - MENU/menu_arrow.png
+      - MENU/Title_Menu.png
+
+outputs:
+  - type: appvar
+    name: DUCKSPT
+    include-file: DUCKSPT.h
+    source-format: c
+    palettes:
+      - palette
+    converts:
+      - dog
+      - ducks
+      - game
+      - menu
