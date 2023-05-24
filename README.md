@@ -1,6 +1,6 @@
 # DuckHunt 
 
-![](https://i.imgur.com/U2pRbN9.png)
+![](https://i.imgur.com/CS7h8bO.png)
 
 > Duck Hunt is a classic game that has been enjoyed by generations of gamers. Now, you can experience the thrill of hunting ducks on your TI-84 Plus CE!
 
