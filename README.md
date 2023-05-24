@@ -1,16 +1,23 @@
 # DuckHunt 
 
-![](https://i.imgur.com/spOGMMq.gif/)
+![](https://i.imgur.com/U2pRbN9.png)
 
-![](https://img.shields.io/github/release/Overload02/DuckHunt) ![](https://img.shields.io/github/issues/Overload02/DuckHunt)
-
-> DuckHunt is a shooter-style game programmed from scratch in C using the CE development toolchain.
+> Duck Hunt is a classic game that has been enjoyed by generations of gamers. Now, you can experience the thrill of hunting ducks on your TI-84 Plus CE!
 
 ## Concepts Images
 
 ![](https://i.imgur.com/NqsDMn6.png) ![](https://i.imgur.com/gFsHDo4.png)
 
 ![](https://i.imgur.com/saReUG8.png) ![](https://i.imgur.com/i0hTkjq.png)
+
+## Features
+    * Multiple game modes, including Classic, Time Attack, and Survival
+
+    * Power-ups that can help you increase your score
+
+    * High-score leaderboard
+
+    * Compatible with all TI-84 Plus CE calculators
 
 ## Development
 ![](https://i.imgur.com/tUiSMwF.png) ![](https://i.imgur.com/zt9trPT.png)
@@ -19,4 +26,4 @@
 
 ------------
 
- Copyright &copy; 2020 - 2022, ***Alvajoy123***
+ Copyright &copy; 2020 - 2023, ***Alvajoy123***
