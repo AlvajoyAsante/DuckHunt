@@ -1,15 +1,8 @@
 #ifndef DUCKS_H
 #define DUCKS_H
 
-#define DUCK_ANIMATE_TIMER_MAX 4
-
 #include <tice.h>
 #include <graphx.h>
-
-extern int timers[5];
-extern int amount_fallen;
-extern int fallen_id;
-extern int enemies_amount;
 
 struct enemies_t
 {
@@ -20,6 +13,10 @@ struct enemies_t
 	// is bird dead / alive or not active.
 	bool active;
 	bool shot;
+	bool fly_away;
+
+	// Determines the amount of points
+	int points;
 
 	// predetermined based on  level
 	int speed;
@@ -30,7 +27,7 @@ struct enemies_t
 
 	// custom number
 	int cnum;
-	
+
 	// determines sprites angle
 	int angle;
 

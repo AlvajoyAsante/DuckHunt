@@ -6,64 +6,68 @@
 #include "gfx/DUCKSPT.h"
 
 struct enemies_t enemies[5];
-int enemies_amount;
-int timers[5];
-int amount_fallen;
-int fallen_id;
 
 /* Duck Animations */
 static void animate(uint8_t pos)
 {
+
+	if (enemies[pos].cnum == 3 || enemies[pos].cnum == 6)
+	{
+		goto angle;
+	}
+
 	/* Check and updates constume numbers based on current costume */
 	switch (enemies[pos].cnum)
 	{
 		/* Duck A's happen here */
 	case 1: // If Costume is 1 change it at the right time to 2
-		if (enemies[pos].animate >= DUCK_ANIMATE_TIMER_MAX)
-			enemies[pos].cnum = 2;
+		enemies[pos].cnum = 2;
 		break;
 
 	case 2: // If Costume is 2 change it at the right time to 3
-		if (enemies[pos].animate >= DUCK_ANIMATE_TIMER_MAX)
-			enemies[pos].cnum = 3;
+		enemies[pos].cnum = 3;
 		break;
 
 	case 3: // If Costume is 3 change to 1 and update angle
 		enemies[pos].cnum = 1;
-		goto angle;
 		break;
 
 		/* Duck B's happen here */
 	case 4: // If Costume is 4 change it at the right time to 5
-		if (enemies[pos].animate >= DUCK_ANIMATE_TIMER_MAX)
-			enemies[pos].cnum = 5;
+		enemies[pos].cnum = 5;
 		break;
 
 	case 5: // If Costume is 5 change it at the right time to 6
-		if (enemies[pos].animate >= DUCK_ANIMATE_TIMER_MAX)
-			enemies[pos].cnum = 6;
+		enemies[pos].cnum = 6;
 		break;
 
 	case 6: // If Costume is 6 change to 4 and update angle
 		enemies[pos].cnum = 4;
-		goto angle;
 		break;
 
 	case 7: // If Costume is 7 (Shot) then wait 10 milsec and change to 8
-		if (timers[pos] >= DUCK_ANIMATE_TIMER_MAX * 3)
-			enemies[pos].cnum = 8;
+		enemies[pos].cnum = 8;
 		break;
 
 	case 8: // If Costume is 8 change it at the right time to 9
-		if (enemies[pos].animate >= DUCK_ANIMATE_TIMER_MAX)
-			enemies[pos].cnum = 9;
+		enemies[pos].cnum = 9;
 		break;
 
 	case 9: // If Costume is 9 change it at the right time to 8
-		if (enemies[pos].animate >= DUCK_ANIMATE_TIMER_MAX)
-			enemies[pos].cnum = 8;
+		enemies[pos].cnum = 8;
+		break;
+
+	case 10:
+		enemies[pos].cnum = 11;
+		break;
+	case 11:
+		enemies[pos].cnum = 12;
+		break;
+	case 12:
+		enemies[pos].cnum = 10;
 		break;
 	}
+
 	return;
 
 angle:
@@ -84,7 +88,15 @@ angle:
 	/* Check duck was shot */
 	if (enemies[pos].angle == 0)
 	{
-		enemies[pos].cnum = 7;
+		if (enemies[pos].shot)
+		{
+			enemies[pos].cnum = 7;
+		}
+		else if (enemies[pos].fly_away)
+		{
+			enemies[pos].cnum = 10;
+		}
+
 		return;
 	}
 }
@@ -95,8 +107,10 @@ void animate_sprites(uint8_t pos)
 	gfx_sprite_t *temp_buffer;
 	gfx_sprite_t *sprite_buff = gfx_MallocSprite(40, 40);
 
-	// Animate ducks based
-	animate(pos);
+	if (enemies[pos].animate >= ANIMATE_TIMER_MAX)
+	{
+		animate(pos);
+	}
 
 	/* Render ducks based on sprites */
 	switch (enemies[pos].cnum)
@@ -322,6 +336,63 @@ void animate_sprites(uint8_t pos)
 
 		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
 		break;
+
+	case 10:
+		switch (enemies[pos].type)
+		{ // based on speeed
+		case 1:
+			temp_buffer = Duck_Flyaway_1;
+			break;
+
+		case 2:
+			temp_buffer = Duckb_Flyaway_1;
+			break;
+
+		case 3:
+			temp_buffer = Duckc_Flyaway_1;
+			break;
+		}
+
+		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
+		break;
+
+	case 11:
+		switch (enemies[pos].type)
+		{ // based on speeed
+		case 1:
+			temp_buffer = Duck_Flyaway_2;
+			break;
+
+		case 2:
+			temp_buffer = Duckb_Flyaway_2;
+			break;
+
+		case 3:
+			temp_buffer = Duckc_Flyaway_2;
+			break;
+		}
+
+		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
+		break;
+
+	case 12:
+		switch (enemies[pos].type)
+		{ // based on speeed
+		case 1:
+			temp_buffer = Duck_Flyaway_3;
+			break;
+
+		case 2:
+			temp_buffer = Duckb_Flyaway_3;
+			break;
+
+		case 3:
+			temp_buffer = Duckc_Flyaway_3;
+			break;
+		}
+
+		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
+		break;
 	}
 
 	// free(temp_buffer);
@@ -330,10 +401,23 @@ void animate_sprites(uint8_t pos)
 
 void update_enemies(void)
 {
-	for (int i = 0; i < enemies_amount; i++)
+	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		if (enemies[i].active)
 		{
+			if (player.bullets < 1)
+			{
+				if (!enemies[i].shot)
+				{
+					enemies[i].angle = 0;
+					enemies[i].gotoY = -20;
+					enemies[i].gotoX = enemies[i].x;
+					enemies[i].speed = 4;
+					enemies[i].fly_away = 1;
+					if (enemies[i].cnum < 10) enemies[i].cnum = 10;
+				}
+			}
+
 			/* Checks if the X position of duck is at its dest point */
 			if (enemies[i].x != enemies[i].gotoX)
 			{
@@ -402,7 +486,7 @@ void update_enemies(void)
 				/* Check if the bird is falling */
 				if (enemies[i].angle == 0)
 				{
-					amount_fallen++;
+					DUCK_FALLEN_AMOUNT++;
 					enemies[i].active = 0;
 					return;
 				}
@@ -412,18 +496,8 @@ void update_enemies(void)
 				}
 			}
 
-			/* General timer */
-			if (timers[i] < DUCK_ANIMATE_TIMER_MAX * 3)
-			{
-				timers[i]++; // Update the timer
-			}
-			else
-			{
-				timers[i] = 0; // Reset the timer
-			}
-
 			/* Animation timer */
-			if (enemies[i].animate < DUCK_ANIMATE_TIMER_MAX)
+			if (enemies[i].animate < ANIMATE_TIMER_MAX)
 			{
 				enemies[i].animate++; // Update the timer
 			}
@@ -435,9 +509,12 @@ void update_enemies(void)
 		else
 		{
 			/* Checks if the all ducks have fallen */
-			if ((amount_fallen % enemies_amount) == 0)
+			if ((DUCK_FALLEN_AMOUNT % DUCK_AMOUNT) == 0)
 			{
-				if (menu.opt <= 2) // init a new levevl
+
+				player.bullets = 3; // Reset Bullets
+
+				if (menu.opt < 3) // init a new levevl
 					init_enemies(menu.opt, player.level++);
 				return;
 			}
@@ -453,7 +530,7 @@ void update_enemies(void)
 void draw_enemies(void)
 {
 	/* Draws and updates all the ducks */
-	for (int i = 0; i < enemies_amount; i++)
+	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		/* Checks if the duck is active */
 		if (enemies[i].active)
@@ -462,7 +539,7 @@ void draw_enemies(void)
 			animate_sprites(i);
 
 			/* Render the grass if the duck is a certain */
-			if (enemies[i].y > 134)
+			if (enemies[i].y >= 134 || enemies[i].y <= 8)
 			{
 				/* Set the transparent color of the duck based on the player game mode (aka menu.opt) */
 				switch (menu.opt)
@@ -528,9 +605,9 @@ int Goto_Pos(int pos, int Dpos, uint8_t speed)
 
 void init_enemies(uint8_t amount, uint8_t level)
 {
-	enemies_amount = amount;
+	DUCK_AMOUNT = amount;
 
-	for (int i = 0; i < enemies_amount; i++)
+	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		/* bool to check if active and not shot */
 		enemies[i].active = 1;
@@ -617,10 +694,26 @@ void init_enemies(uint8_t amount, uint8_t level)
 		{
 			enemies[i].type = 3;
 		}
+
+		/* Setting Up the pionts */
+		switch (enemies[i].type)
+		{
+		case 1:
+			enemies[i].points = 500;
+			break;
+
+		case 2:
+			enemies[i].points = 1000;
+			break;
+
+		case 3:
+			enemies[i].points = 1500;
+			break;
+		}
 	}
 
 	/* Set amount of shot ducks to zero */
-	amount_fallen = 0;
+	DUCK_FALLEN_AMOUNT = 0;
 }
 
 int Set_Goto_Y(void)
