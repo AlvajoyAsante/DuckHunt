@@ -25,6 +25,9 @@ struct dog_t
 
 	// tick
 	int tick;
+
+	// animation timer
+	int animate;
 };
 extern struct dog_t dog;
 
