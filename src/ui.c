@@ -1,9 +1,105 @@
 #include "ui.h"
 #include "ducks.h"
-#include "dog.h"
 #include "menu.h"
+#include "dog.h"
 #include "player.h"
 #include "gfx/DUCKSPT.h"
+
+struct game_t game;
+
+static void flyaway_scene(void){
+	gfx_sprite_t *temp = gfx_MallocSprite(fly_away_width, fly_away_height);
+	gfx_sprite_t *back_buff = gfx_MallocSprite(fly_away_width, fly_away_height);
+
+	gfx_GetSprite(back_buff, 124, 103);
+
+
+	zx7_Decompress(temp, fly_away_compressed);
+	gfx_TransparentSprite(temp, 124, 103);
+	free(temp);
+
+	gfx_Blit(1);
+
+	gfx_Sprite(back_buff, 124, 103);
+	free(back_buff);
+}
+
+static void pause_scene(void)
+{
+	gfx_sprite_t *temp = gfx_MallocSprite(pause_width, pause_height);
+	gfx_sprite_t *back_buff = gfx_MallocSprite(pause_width, pause_height);
+
+	gfx_GetSprite(back_buff, 135, 88);
+
+	/* Pretend this is the dog */
+	/* gfx_SetColor(1); // White
+	gfx_FillRectangle(135, 88, 49, 33); */
+
+	zx7_Decompress(temp, pause_compressed);
+	gfx_TransparentSprite(temp, 135, 88);
+	free(temp);
+
+	gfx_Blit(1);
+
+	delay(60);
+
+	while (!os_GetCSC())
+		;
+
+	delay(60);
+
+	gfx_Sprite(back_buff, 135, 88);
+	free(back_buff);
+}
+
+void update_scene(void)
+{
+	gfx_sprite_t *temp;
+
+	if (menu.opt < 3)
+	{
+		
+
+		gfx_SetColor(2); // Black
+		gfx_FillRectangle(57, 212, 20, 7);
+
+		// Draw Bullets
+		for (int i = 0; i < player.bullets; i++)
+		{
+			temp = gfx_MallocSprite(bullet_width, bullet_height);
+			zx7_Decompress(temp, bullet_compressed);
+			gfx_TransparentSprite(temp, 57 + (i * (4 + 4)), 212);
+			free(temp);
+		}
+
+		// Draw Score
+
+		/* Fill the area up */
+		gfx_SetColor(2); // Black
+		gfx_FillRectangle(223, 211, 47, 8);
+
+		/* Print the Score */
+		gfx_SetTextFGColor(1);
+		gfx_SetTextXY(223, 211);
+		gfx_PrintInt(player.score, 6);
+
+		// Draw Ducks Shot
+
+		if (player.bullets < 1){
+			// Check if there are any birds on scene
+			flyaway_scene();
+		}
+		
+	}
+	else
+	{
+	}
+
+	if (kb_Data[1] == kb_Mode)
+	{
+		pause_scene();
+	}
+}
 
 /**
  * This is used to draw the scene for the game.
@@ -83,6 +179,8 @@ void draw_scene(void)
 	{ // Game C
 	}
 
+	update_scene();
+
 	gfx_Blit(1);
 }
 
@@ -97,6 +195,7 @@ void init_duckhunt(uint8_t type)
 	player.score = 0;
 	player.speed = 5;
 	player.level = 1;
+	player.bullets = 3;
 
 	/* Makes sure that the type is only game a or b */
 	if (type < 3)
@@ -121,17 +220,6 @@ void init_duckhunt(uint8_t type)
 	}
 }
 
-/**
- * This is a function used for displaying a version number.
- */
-void show_ver(void)
-{
-	gfx_SetTextFGColor(1);
-	gfx_SetTextXY(1, 230);
-
-	gfx_PrintString(DUCKHUNT_VERSION);
-}
-
 // New functions to help with rendering.
 /**
  * This function grabs buffer sprite.
@@ -144,7 +232,7 @@ void get_buffer_layer(void)
 	/* Grab player back buffer */
 	gfx_GetSprite(player.back_buffer, player.x - 12, player.y - 12);
 
-	for (int i = 0; i < enemies_amount; i++)
+	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		/* Allocate space for back buffer */
 		enemies[i].back_buffer = gfx_MallocSprite(38, 38);
@@ -168,7 +256,7 @@ void draw_buffer_layer(void)
 
 void draw_duck_buffer_layer(void)
 {
-	for (int i = 0; i < enemies_amount; i++)
+	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		gfx_TransparentSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
 	}
@@ -184,7 +272,7 @@ void free_buffer_layer(void)
 	free(player.back_buffer);
 
 	/* Free duck back buffer */
-	for (int i = 0; i < enemies_amount; i++)
+	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		free(enemies[i].back_buffer);
 	}
