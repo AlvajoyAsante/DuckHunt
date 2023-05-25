@@ -37,7 +37,7 @@ int main(void)
 	gfx_SetTransparentColor(0); // Hot pink color
 	gfx_SetTextFGColor(2);		// black
 
-// menu:
+	// menu:
 
 	if (!init_menu())
 		goto end; // If there was a force exit while on menu it will exit.
@@ -48,7 +48,7 @@ int main(void)
 	// Draw dog scene here
 	draw_dog_scene();
 
-	while (player_keys())
+	do
 	{
 		get_buffer_layer();
 
@@ -57,12 +57,14 @@ int main(void)
 
 		gfx_Blit(1);
 
+		update_scene();
+
 		draw_buffer_layer();
 
 		free_buffer_layer();
 
 		update_enemies();
-	}
+	} while (player_keys());
 
 	// goto menu;
 
