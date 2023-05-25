@@ -28,6 +28,5 @@ extern struct player_t player;
 /* player keys + shooting */
 void draw_player(void);
 bool player_keys(void);
-void shoot(void); // shoot detection 
 
 #endif
