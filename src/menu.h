@@ -8,7 +8,6 @@
 struct menu_t
 {
 	int opt;
-	int enter;
 };
 extern struct menu_t menu;
 

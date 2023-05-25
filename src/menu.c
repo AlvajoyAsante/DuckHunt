@@ -59,13 +59,17 @@ bool init_menu(void)
 	gfx_TransparentSprite(temp_sprite, (LCD_WIDTH - cr_text_width) / 2, 214);
 
 	// Show version of program
-	show_ver();
+	gfx_SetTextFGColor(1);
+	gfx_SetTextXY(1, 230);
+	gfx_PrintString(DUCKHUNT_VERSION);
 
+	// Show High Score
 	gfx_SetTextFGColor(9); // Green
 	gfx_SetTextXY(85, 190);
 	gfx_PrintString("TOP  SCORE  =  ");
 	gfx_PrintInt(0, 5);
 
+	// Show Author name
 	gfx_SetTextFGColor(1); // White
 	gfx_SetTextXY(100, 228);
 	gfx_PrintString("Port by Alvajoy123");
