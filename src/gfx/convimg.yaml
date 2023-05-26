@@ -84,7 +84,9 @@ converts:
       - GAME/bg_bush.png
       - GAME/bg_ground.png
       - GAME/bg_tree.png
-      - GAME/bird_icon.png
+      - GAME/panel_icon_1.png
+      - GAME/panel_icon_2.png
+      - GAME/panel_icon_3.png
       - GAME/bullet.png
       - GAME/bullet_board.png
       - GAME/c_ground.png
