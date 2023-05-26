@@ -55,9 +55,11 @@ int main(void)
 		draw_enemies();
 		draw_player();
 
+		update_scene();
+		
 		gfx_Blit(1);
 
-		update_scene();
+		
 
 		draw_buffer_layer();
 

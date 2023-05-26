@@ -7,12 +7,12 @@
 
 struct game_t game;
 
-static void flyaway_scene(void){
+static void flyaway_scene(void)
+{
 	gfx_sprite_t *temp = gfx_MallocSprite(fly_away_width, fly_away_height);
 	gfx_sprite_t *back_buff = gfx_MallocSprite(fly_away_width, fly_away_height);
 
 	gfx_GetSprite(back_buff, 124, 103);
-
 
 	zx7_Decompress(temp, fly_away_compressed);
 	gfx_TransparentSprite(temp, 124, 103);
@@ -56,40 +56,102 @@ void update_scene(void)
 {
 	gfx_sprite_t *temp;
 
+	gfx_SetColor(2); // Black
+	gfx_FillRectangle(57, 212, 20, 7);
+
+	// Draw Bullets
+	for (int i = 0; i < player.bullets; i++)
+	{
+		temp = gfx_MallocSprite(bullet_width, bullet_height);
+		zx7_Decompress(temp, bullet_compressed);
+		gfx_TransparentSprite(temp, 57 + (i * (4 + 4)), 212);
+		free(temp);
+	}
+
+	// Hit panel
+	gfx_SetColor(2);
+	gfx_FillRectangle(127, 213, 80, 15);
+
+	/* Shots Hit */
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (game.duck_hits[i])
+		{
+			gfx_SetColor(1);
+		}
+		else
+		{
+			gfx_SetColor(5);
+		}
+
+		/* if (game.duck_hits[i])
+		{
+		} */
+
+		gfx_FillRectangle(127 + (i * (7 + 1)), 213, 7, 7);
+	}
+
+	/* Advanced amount */
+	if (player.round >= 1 && player.round <= 10)
+	{
+		GAME_ADVANCE_THRESHOLD = 6;
+	}
+	else if (player.round >= 11 && player.round <= 12)
+	{
+		GAME_ADVANCE_THRESHOLD = 7;
+	}
+	else if (player.round >= 13 && player.round <= 14)
+	{
+		GAME_ADVANCE_THRESHOLD = 8;
+	}
+	else if (player.round >= 15 && player.round <= 19)
+	{
+		GAME_ADVANCE_THRESHOLD = 9;
+	}
+	else
+	{
+		GAME_ADVANCE_THRESHOLD = 10;
+	}
+
+	gfx_SetColor(6);
+	for (int i = 0; i < GAME_ADVANCE_THRESHOLD; i++)
+	{
+		gfx_FillRectangle(127 + (i * (7 + 1)), 221, 7, 7);
+	}
+
+	// Draw Score
+
+	/* Fill the area up */
+	gfx_SetColor(2); // Black
+	gfx_FillRectangle(223, 211, 47, 8);
+
+	/* Print the Score */
+	gfx_SetTextFGColor(1);
+	gfx_SetTextXY(223, 211);
+	gfx_PrintInt(player.score, 6);
+
+	// Draw Round
+
+	/* gfx_SetColor(2); // Black
+	gfx_FillRectangle(253, 11, 32, 8); */
+
+	gfx_SetTextFGColor(16);
+	gfx_SetTextBGColor(2);
+	gfx_SetTextXY(253, 11);
+	gfx_PrintString("R=");
+	gfx_PrintInt(player.round, 0);
+
 	if (menu.opt < 3)
 	{
-		
-
-		gfx_SetColor(2); // Black
-		gfx_FillRectangle(57, 212, 20, 7);
-
-		// Draw Bullets
-		for (int i = 0; i < player.bullets; i++)
+		if (player.bullets == 0)
 		{
-			temp = gfx_MallocSprite(bullet_width, bullet_height);
-			zx7_Decompress(temp, bullet_compressed);
-			gfx_TransparentSprite(temp, 57 + (i * (4 + 4)), 212);
-			free(temp);
-		}
-
-		// Draw Score
-
-		/* Fill the area up */
-		gfx_SetColor(2); // Black
-		gfx_FillRectangle(223, 211, 47, 8);
-
-		/* Print the Score */
-		gfx_SetTextFGColor(1);
-		gfx_SetTextXY(223, 211);
-		gfx_PrintInt(player.score, 6);
-
-		// Draw Ducks Shot
-
-		if (player.bullets < 1){
 			// Check if there are any birds on scene
-			flyaway_scene();
+			if (DUCK_FALLEN_AMOUNT != DUCK_AMOUNT)
+			{
+				flyaway_scene();
+			}
 		}
-		
 	}
 	else
 	{
@@ -139,11 +201,13 @@ void draw_scene(void)
 		temp = gfx_MallocSprite(bg_tree_width, bg_tree_height);
 		zx7_Decompress(temp, bg_tree_compressed);
 		gfx_TransparentSprite(temp, 44, 39);
+		free(temp);
 
 		// bush
 		temp = gfx_MallocSprite(bg_bush_width, bg_bush_height);
 		zx7_Decompress(temp, bg_bush_compressed);
 		gfx_TransparentSprite(temp, 218, 132);
+		free(temp);
 
 		// ground
 		gfx_SetColor(6);
@@ -152,6 +216,7 @@ void draw_scene(void)
 		temp = gfx_MallocSprite(bg_ground_width, bg_ground_height);
 		zx7_Decompress(temp, bg_ground_compressed);
 		gfx_TransparentSprite(temp, 32, 156);
+		free(temp);
 
 		back_buffer = gfx_MallocSprite(1, bg_ground_height);
 		gfx_GetSprite(back_buffer, 286, 156);
@@ -162,24 +227,97 @@ void draw_scene(void)
 		temp = gfx_MallocSprite(bullet_board_width, bullet_board_height);
 		zx7_Decompress(temp, bullet_board_compressed);
 		gfx_TransparentSprite(temp, 52, 209);
+		free(temp);
 
 		// kill board
 		temp = gfx_MallocSprite(kill_board_width, kill_board_height);
 		zx7_Decompress(temp, kill_board_compressed);
 		gfx_TransparentSprite(temp, 92, 209);
+		free(temp);
 
 		// score board
 		temp = gfx_MallocSprite(score_board_width, score_board_height);
 		zx7_Decompress(temp, score_board_compressed);
 		gfx_TransparentSprite(temp, 220, 209);
-
 		free(temp);
+
+		// Print Score Board Information
+		update_scene();
+
+		// Print Round Number
+		gfx_sprite_t *back_buff = gfx_MallocSprite(fly_away_width, fly_away_height * 2);
+
+		gfx_GetSprite(back_buff, 124, 103);
+
+		ui_rectangle(124, 103, fly_away_width, fly_away_height * 2);
+
+		gfx_SetTextFGColor(1);
+		gfx_SetTextXY(141, 110);
+		gfx_PrintString("ROUND");
+		gfx_SetTextXY(155, 122);
+		gfx_PrintInt(player.round, 0);
+
+		gfx_Blit(1);
+
+		delay(1000);
+
+		gfx_Sprite(back_buff, 124, 103);
+		free(back_buff);
+
+		// Render dog
+		dog_SetMode(1); // Sets dog scene to walk
+		draw_dog_scene();
 	}
 	else
 	{ // Game C
-	}
 
-	update_scene();
+		temp = gfx_MallocSprite(c_mountain_width, c_mountain_height);
+		zx7_Decompress(temp, c_mountain_compressed);
+		gfx_TransparentSprite(temp, 32, 95);
+		free(temp);
+
+		temp = gfx_MallocSprite(c_ground_width, c_ground_height);
+		zx7_Decompress(temp, c_ground_compressed);
+		gfx_TransparentSprite(temp, 32, 140);
+		free(temp);
+
+		gfx_SetColor(16); // Green
+		gfx_FillRectangle(32, 183, c_panel_width, c_panel_height);
+
+		temp = gfx_MallocSprite(c_panel_width, c_panel_height);
+		zx7_Decompress(temp, c_panel_compressed);
+		gfx_TransparentSprite(temp, 32, 183);
+		free(temp);
+
+		back_buffer = gfx_MallocSprite(1, c_panel_height + c_ground_height + c_mountain_height);
+		gfx_GetSprite(back_buffer, 286, 95);
+		gfx_Sprite(back_buffer, 287, 95);
+		free(back_buffer);
+
+		gfx_SetColor(7); // Gray
+		gfx_FillRectangle(32, 191, 256, 40);
+
+		// bullet board
+		temp = gfx_MallocSprite(bullet_board_width, bullet_board_height);
+		zx7_Decompress(temp, bullet_board_compressed);
+		gfx_TransparentSprite(temp, 52, 201);
+		free(temp);
+
+		// kill board
+		temp = gfx_MallocSprite(kill_board_width, kill_board_height);
+		zx7_Decompress(temp, kill_board_compressed);
+		gfx_TransparentSprite(temp, 92, 201);
+		free(temp);
+
+		// score board
+		temp = gfx_MallocSprite(score_board_width, score_board_height);
+		zx7_Decompress(temp, score_board_compressed);
+		gfx_TransparentSprite(temp, 220, 201);
+		free(temp);
+
+		// Print Score Board Information
+		update_scene();
+	}
 
 	gfx_Blit(1);
 }
@@ -195,13 +333,10 @@ void init_duckhunt(uint8_t type)
 	player.score = 0;
 	player.speed = 5;
 	player.level = 1;
+	player.round = 1;
 	player.bullets = 3;
 
-	/* Makes sure that the type is only game a or b */
-	if (type < 3)
-	{
-		dog_SetMode(0);
-	}
+	dog_SetMode(0);
 
 	/* Set the enemies types */
 	switch (type)
@@ -218,6 +353,27 @@ void init_duckhunt(uint8_t type)
 		init_enemies(2, 1);
 		break;
 	}
+}
+
+void reset_duck_hits(void)
+{
+	for (int i = 0; i < 10; i++)
+		game.duck_hits[i] = 0;
+}
+
+int get_duck_hits_amount(void)
+{
+	int tick = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (game.duck_hits[i] == 1)
+		{
+			tick++;
+		}
+	}
+
+	return tick;
 }
 
 // New functions to help with rendering.
@@ -275,5 +431,35 @@ void free_buffer_layer(void)
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		free(enemies[i].back_buffer);
+	}
+}
+
+void ui_rectangle(int x, int y, int w, int h)
+{
+	gfx_SetColor(16);
+	for (int i = 0; i < w; i++)
+	{
+		if (i == 0 || i == w - 1)
+		{
+			gfx_VertLine(x + i, y + 1, h - 2);
+		}
+		else
+			gfx_VertLine(x + i, y, h);
+	}
+
+	gfx_SetColor(2);
+
+	x++;
+	y++;
+	w -= 2;
+	h -= 2;
+	for (int i = 0; i < w; i++)
+	{
+		if (i == 0 || i == w - 1)
+		{
+			gfx_VertLine(x + i, y + 1, h - 2);
+		}
+		else
+			gfx_VertLine(x + i, y, h);
 	}
 }

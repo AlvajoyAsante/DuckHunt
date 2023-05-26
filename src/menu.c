@@ -42,21 +42,25 @@ bool init_menu(void)
 	temp_sprite = gfx_MallocSprite(Title_Menu_width, Title_Menu_height);
 	zx7_Decompress(temp_sprite, Title_Menu_compressed);
 	gfx_TransparentSprite(temp_sprite, 86, 32);
+	free(temp_sprite);
 
 	// Render the game modes text
 	temp_sprite = gfx_MallocSprite(game_types_width, game_types_height);
 	zx7_Decompress(temp_sprite, game_types_compressed);
 	gfx_TransparentSprite(temp_sprite, 89, 132);
+	free(temp_sprite);
 
 	// Render the game modes
 	temp_sprite = gfx_MallocSprite(game_type_text_width, game_type_text_height);
 	zx7_Decompress(temp_sprite, game_type_text_compressed);
 	gfx_TransparentSprite(temp_sprite, 168, 132);
+	free(temp_sprite);
 
 	// Renders nintendo text
 	temp_sprite = gfx_MallocSprite(cr_text_width, cr_text_height);
 	zx7_Decompress(temp_sprite, cr_text_compressed);
 	gfx_TransparentSprite(temp_sprite, (LCD_WIDTH - cr_text_width) / 2, 214);
+	free(temp_sprite);
 
 	// Show version of program
 	gfx_SetTextFGColor(1);

@@ -17,6 +17,7 @@ struct player_t {
 	
 	int bullets;
 	int level;
+	int round;
 
 	gfx_sprite_t *back_buffer;
 

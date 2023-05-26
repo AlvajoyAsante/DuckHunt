@@ -414,7 +414,11 @@ void update_enemies(void)
 					enemies[i].gotoX = enemies[i].x;
 					enemies[i].speed = 4;
 					enemies[i].fly_away = 1;
-					if (enemies[i].cnum < 10) enemies[i].cnum = 10;
+					if (enemies[i].cnum < 10)
+					{
+						enemies[i].cnum = 10;
+						game.duck_hits[GAME_TOTAL_HITS + i] = 0;
+					}
 				}
 			}
 
@@ -486,7 +490,7 @@ void update_enemies(void)
 				/* Check if the bird is falling */
 				if (enemies[i].angle == 0)
 				{
-					DUCK_FALLEN_AMOUNT++;
+					DUCK_FALLEN_ID = i;
 					enemies[i].active = 0;
 					return;
 				}
@@ -512,10 +516,53 @@ void update_enemies(void)
 			if ((DUCK_FALLEN_AMOUNT % DUCK_AMOUNT) == 0)
 			{
 
+				if (menu.opt < 3)
+				{
+					if (GAME_TOTAL_HITS < 9)
+					{
+						GAME_TOTAL_HITS += menu.opt;
+					}
+					else
+					{
+						if (get_duck_hits_amount() >=  GAME_ADVANCE_THRESHOLD)
+						{
+							// Manage the game
+							player.round++;
+
+							GAME_TOTAL_HITS = 0;
+
+							/* Reset The data */
+							player.bullets = 3; // Reset Bullets
+
+							reset_duck_hits();
+
+							draw_scene();
+							return;
+						}
+						else
+						{
+							// Game Over
+							gfx_End();
+							exit(1);
+						}
+					}
+
+					if (DUCK_FALLEN_AMOUNT == DUCK_AMOUNT)
+					{
+						dog_SetMode(2); // Pop up scence
+						draw_dog_scene();
+					}
+
+					init_enemies(menu.opt, player.level++);
+				}
+				else
+				{
+				}
+
 				player.bullets = 3; // Reset Bullets
 
-				if (menu.opt < 3) // init a new levevl
-					init_enemies(menu.opt, player.level++);
+				DUCK_FALLEN_AMOUNT = 0; // Reset Fallen Amount
+
 				return;
 			}
 			else
@@ -605,6 +652,9 @@ int Goto_Pos(int pos, int Dpos, uint8_t speed)
 
 void init_enemies(uint8_t amount, uint8_t level)
 {
+	/* Set amount of shot ducks to zero */
+	DUCK_FALLEN_AMOUNT = 0;
+
 	DUCK_AMOUNT = amount;
 
 	for (int i = 0; i < DUCK_AMOUNT; i++)
@@ -711,9 +761,6 @@ void init_enemies(uint8_t amount, uint8_t level)
 			break;
 		}
 	}
-
-	/* Set amount of shot ducks to zero */
-	DUCK_FALLEN_AMOUNT = 0;
 }
 
 int Set_Goto_Y(void)
