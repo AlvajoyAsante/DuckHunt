@@ -557,7 +557,7 @@ void update_enemies(void)
 
 					if (DUCK_FALLEN_AMOUNT == DUCK_AMOUNT)
 					{
-						dog_SetMode(2); // Pop up scence
+						dog_SetMode(DOG_PEEK_UP); // Pop 
 						draw_dog_scene();
 					}
 

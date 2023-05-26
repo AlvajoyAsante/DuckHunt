@@ -6,24 +6,17 @@
 
 struct dog_t dog;
 
-enum DogMode
-{
-	DOG_HIDDEN = 0,
-	DOG_RUN_TO_CENTER = 1,
-	DOG_PEEK_UP = 2
-};
-
 /**
  * Sets the dog animation type
  * (run to the center, jump over the grass, and peek when a duck has been shot)
  */
-void dog_SetMode(uint8_t pos)
+void dog_SetMode(uint8_t mode)
 {
-	dog.mode = pos;
+	dog.mode = mode;
 	dog.speed = 1;
 	dog.tick = 1;
 
-	switch (pos)
+	switch (mode)
 	{
 	case DOG_RUN_TO_CENTER:
 		dog.x = 32;
@@ -318,6 +311,7 @@ void dog_Update(void)
 		break;
 
 	case DOG_PEEK_UP:
+		/* Peek Up */
 		if (dog.tick == 1)
 		{
 			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
@@ -326,13 +320,13 @@ void dog_Update(void)
 			{
 				dog.tick++;
 				dog.gotoY = dog.y + 30;
+
+				/* Pause when the dog reaches the top */
 				delay(ANIMATE_TIMER_MAX * 50);
 			}
 		}
 
-		//
-
-		// Go back down
+		/* Peek Down */
 		if (dog.tick == 2)
 		{
 
@@ -341,7 +335,6 @@ void dog_Update(void)
 			if (dog.y == dog.gotoY)
 				dog.mode = DOG_HIDDEN;
 		}
-		// peek back down
 		break;
 	}
 }

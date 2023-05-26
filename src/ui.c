@@ -265,7 +265,7 @@ void draw_scene(void)
 		free(back_buff);
 
 		// Render dog
-		dog_SetMode(1); // Sets dog scene to walk
+		dog_SetMode(DOG_RUN_TO_CENTER);
 		draw_dog_scene();
 	}
 	else
@@ -336,7 +336,7 @@ void init_duckhunt(uint8_t type)
 	player.round = 1;
 	player.bullets = 3;
 
-	dog_SetMode(0);
+	dog_SetMode(DOG_HIDDEN);
 
 	/* Set the enemies types */
 	switch (type)
