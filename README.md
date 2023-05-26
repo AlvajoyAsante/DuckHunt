@@ -20,7 +20,9 @@
     * Compatible with all TI-84 Plus CE calculators
 
 ## Development
-![](https://i.imgur.com/tUiSMwF.png) ![](https://i.imgur.com/zt9trPT.png)
+Current State:
+
+![](https://i.imgur.com/x2wiFuC.png)
 
 > *Keep up to date on the recent development by checking out the [New Discord Server](https://discord.gg/xyUZgnD4UJ "New Discord Server") or on [Cemetech Forums](https://www.cemetech.net/forum/viewtopic.php?t=15070 "Cemetech Forums"). You Can Also View The [Trello Board](https://trello.com/b/eYALDr4Q/xenon-development-c "Trello Board") For more information about the development.*
 
