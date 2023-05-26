@@ -1,5 +1,4 @@
 #include <stdbool.h>
-
 #include "ducks.h"
 #include "ui.h"
 #include "dog.h"
@@ -7,9 +6,12 @@
 #include "player.h"
 #include "gfx/DUCKSPT.h"
 
-#define DUCK_FALLING 0
-#define FACE_RIGHT 1
-#define FACE_LEFT 2
+enum DUCK_ANGLE
+{
+	DUCK_FALLING = 0,
+	FACE_RIGHT = 1,
+	FACE_LEFT = 2
+};
 
 struct enemies_t enemies[5];
 
