@@ -1,9 +1,17 @@
+#include <stdbool.h>
 #include "ducks.h"
 #include "ui.h"
 #include "dog.h"
 #include "menu.h"
 #include "player.h"
 #include "gfx/DUCKSPT.h"
+
+enum DUCK_ANGLE
+{
+	DUCK_FALLING = 0,
+	FACE_RIGHT = 1,
+	FACE_LEFT = 2
+};
 
 struct enemies_t enemies[5];
 
@@ -72,7 +80,7 @@ static void animate(uint8_t pos)
 
 angle:
 	/* Checks if duck is moving left or right */
-	if (enemies[pos].angle == 1 || enemies[pos].angle == 2)
+	if (enemies[pos].angle == FACE_RIGHT || enemies[pos].angle == FACE_LEFT)
 	{
 		enemies[pos].cnum = 1;
 		return;
@@ -86,7 +94,7 @@ angle:
 	}
 
 	/* Check duck was shot */
-	if (enemies[pos].angle == 0)
+	if (enemies[pos].angle == DUCK_FALLING)
 	{
 		if (enemies[pos].shot)
 		{
@@ -132,7 +140,7 @@ void animate_sprites(uint8_t pos)
 			break;
 		}
 
-		if (enemies[pos].angle == 2)
+		if (enemies[pos].angle == FACE_LEFT)
 		{
 			gfx_TransparentSprite(gfx_FlipSpriteY(temp_buffer, sprite_buff), enemies[pos].x, enemies[pos].y);
 		}
@@ -160,7 +168,7 @@ void animate_sprites(uint8_t pos)
 			break;
 		}
 
-		if (enemies[pos].angle == 2)
+		if (enemies[pos].angle == FACE_LEFT)
 		{
 			gfx_TransparentSprite(gfx_FlipSpriteY(temp_buffer, sprite_buff), enemies[pos].x, enemies[pos].y);
 		}
@@ -409,7 +417,7 @@ void update_enemies(void)
 			{
 				if (!enemies[i].shot)
 				{
-					enemies[i].angle = 0;
+					enemies[i].angle = DUCK_FALLING;
 					enemies[i].gotoY = -20;
 					enemies[i].gotoX = enemies[i].x;
 					enemies[i].speed = 4;
@@ -429,14 +437,14 @@ void update_enemies(void)
 				if (enemies[i].x < enemies[i].gotoX)
 				{
 					enemies[i].x += enemies[i].speed;
-					if (enemies[i].angle != 0)
-						enemies[i].angle = 1; // Face right
+					if (enemies[i].angle != DUCK_FALLING)
+						enemies[i].angle = FACE_RIGHT;
 				}
 				else if (enemies[i].x > enemies[i].gotoX)
 				{
 					enemies[i].x -= enemies[i].speed;
-					if (enemies[i].angle != 0)
-						enemies[i].angle = 2; // Face Left
+					if (enemies[i].angle != DUCK_FALLING)
+						enemies[i].angle = FACE_LEFT;
 				}
 
 				/* Check if the positin is in the radius of dest point */
@@ -448,7 +456,7 @@ void update_enemies(void)
 			else
 			{
 				/* if at it's destination then set a new got X */
-				if (enemies[i].angle != 0)
+				if (enemies[i].angle != DUCK_FALLING)
 				{
 					enemies[i].gotoX = Set_Goto_X();
 				}
@@ -471,7 +479,7 @@ void update_enemies(void)
 						enemies[i].y += enemies[i].speed;
 
 						/* Update angle if not equal to 0 or 2 */
-						if (enemies[i].angle != 0 && enemies[i].angle != 2)
+						if (enemies[i].angle != DUCK_FALLING && enemies[i].angle != FACE_LEFT)
 							enemies[i].angle = 3;
 					}
 					else if (enemies[i].y > enemies[i].gotoY) // Check if the Y position is above the dest position
@@ -480,7 +488,7 @@ void update_enemies(void)
 						enemies[i].y -= enemies[i].speed;
 
 						/* Update angle if not equal to 0 or 1 */
-						if (enemies[i].angle != 0 && enemies[i].angle != 1)
+						if (enemies[i].angle != DUCK_FALLING && enemies[i].angle != FACE_RIGHT)
 							enemies[i].angle = 4;
 					}
 				}
@@ -488,10 +496,10 @@ void update_enemies(void)
 			else
 			{
 				/* Check if the bird is falling */
-				if (enemies[i].angle == 0)
+				if (enemies[i].angle == DUCK_FALLING)
 				{
 					DUCK_FALLEN_ID = i;
-					enemies[i].active = 0;
+					enemies[i].active = false;
 					return;
 				}
 				else
@@ -660,7 +668,7 @@ void init_enemies(uint8_t amount, uint8_t level)
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		/* bool to check if active and not shot */
-		enemies[i].active = 1;
+		enemies[i].active = true;
 
 		/* Costume Number for animation */
 		enemies[i].cnum = 1;
@@ -680,8 +688,8 @@ void init_enemies(uint8_t amount, uint8_t level)
 		enemies[i].gotoY = Set_Goto_Y();
 
 		/* Reset the if shot and flying angle */
-		enemies[i].shot = 0;
-		enemies[i].angle = 1; // flying angle
+		enemies[i].shot = false;
+		enemies[i].angle = FACE_RIGHT; // flying angle
 
 		/* Set Duck speed based on input level */
 		switch (level)
