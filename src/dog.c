@@ -13,8 +13,6 @@ enum DogMode
 	DOG_PEEK_UP = 2
 };
 
-
-
 /**
  * Sets the dog animation type
  * (run to the center, jump over the grass, and peek when a duck has been shot)
