@@ -21,7 +21,7 @@
 * Transfer to the calculator the latest C libraries to your calculator; you can find them at this link:
   https://github.com/CE-Programming/libraries/releases/latest
 
-* Transfer the 2 files in this folder: (DUCKHUNT, DUCKSPT)
+* Transfer the 2 files from Github release: (DUCKHUNT, DUCKSPT)
 
 ## Run
 
