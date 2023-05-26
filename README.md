@@ -4,7 +4,7 @@
 
 > Duck Hunt is a classic game that has been enjoyed by generations of gamers. Now, you can experience the thrill of hunting ducks on your TI-84 Plus CE!
 
-### Features
+## Features
 
 * Multiple game modes, including Classic, Time Attack, and Survival
 
@@ -14,7 +14,7 @@
 
 * Compatible with all TI-84 Plus CE calculators
 
-### Installation
+## Installation
 
 * Download and install TI-Connect CE or TILP if you don't already have connectivity software.
 
@@ -23,7 +23,7 @@
 
 * Transfer the 2 files in this folder: (DUCKHUNT, DUCKSPT)
 
-### Run
+## Run
 
 Run DuckHunt from the homescreen by pressing `[prgm]` and selecting `DUCKHUNT`,
 Your screen should look like this (press Enter when it does):
@@ -33,7 +33,7 @@ Your screen should look like this (press Enter when it does):
 Note: If your OS is 5.5 or higher, use the arTIfiCE exploit tool to run the program: https://yvantt.github.io/arTIfiCE/.
 
 
-### Controls 
+## Controls 
 
     [←→↓↑]  - Move cursor 
     [2nd]   - Shoot bullet
@@ -41,13 +41,13 @@ Note: If your OS is 5.5 or higher, use the arTIfiCE exploit tool to run the prog
     [del]   - Quit to homescreen
 
 
-### Concepts Images
+## Concepts Images
 
 ![](./doc/CONCEPTS/menu.png) ![](./doc/CONCEPTS/game_a.png)
 
 ![](./doc/CONCEPTS/game_b.png) ![](.doc/../doc/CONCEPTS/game_c.png)
 
-### Development
+## Development
 Current State:
 
 |GAME A|GAME B|GAME C|
@@ -57,7 +57,7 @@ Current State:
 
 > *Keep up to date on the recent development by checking out the [New Discord Server](https://discord.gg/xyUZgnD4UJ "New Discord Server") or on [Cemetech Forums](https://www.cemetech.net/forum/viewtopic.php?t=15070 "Cemetech Forums"). You can also view the [Trello Board](https://trello.com/b/NkkezsJu/duckhunt-development-c) For more information about the development.*
 
-### Credit
+## Credit
 
 * DuckHunt was written from scratch based off of NES Duck Hunt mechanics. 
 
