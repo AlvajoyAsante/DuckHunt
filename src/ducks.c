@@ -10,7 +10,9 @@ enum DUCK_ANGLE
 {
 	DUCK_FALLING = 0,
 	FACE_RIGHT = 1,
-	FACE_LEFT = 2
+	FACE_LEFT = 2,
+	FACE_UP_RIGHT = 3,
+	FACE_UP_LEFT = 4
 };
 
 struct enemies_t enemies[5];
@@ -53,10 +55,12 @@ static void animate(uint8_t pos)
 		enemies[pos].cnum = 4;
 		break;
 
+		/* Duck Shot */
 	case 7: // If Costume is 7 (Shot) then wait 10 milsec and change to 8
 		enemies[pos].cnum = 8;
 		break;
 
+		/* Duck Falling */
 	case 8: // If Costume is 8 change it at the right time to 9
 		enemies[pos].cnum = 9;
 		break;
@@ -65,13 +69,14 @@ static void animate(uint8_t pos)
 		enemies[pos].cnum = 8;
 		break;
 
-	case 10:
+		/* Duck Flying Away */
+	case 10: // If Costume is 10 change it at the right time to 11
 		enemies[pos].cnum = 11;
 		break;
-	case 11:
+	case 11: // If Costume is 11 change it at the right time to 12
 		enemies[pos].cnum = 12;
 		break;
-	case 12:
+	case 12: // If Costume is 12 change it at the right time to 10
 		enemies[pos].cnum = 10;
 		break;
 	}
@@ -87,22 +92,22 @@ angle:
 	}
 
 	/* Checks if duck is move up or down */
-	if (enemies[pos].angle == 3 || enemies[pos].angle == 4)
+	if (enemies[pos].angle == FACE_UP_RIGHT || enemies[pos].angle == FACE_UP_LEFT)
 	{
 		enemies[pos].cnum = 4;
 		return;
 	}
 
-	/* Check duck was shot */
+	/* Check duck was shot or is flying away */
 	if (enemies[pos].angle == DUCK_FALLING)
 	{
 		if (enemies[pos].shot)
 		{
-			enemies[pos].cnum = 7;
+			enemies[pos].cnum = 7; // Set to shot sprite
 		}
 		else if (enemies[pos].fly_away)
 		{
-			enemies[pos].cnum = 10;
+			enemies[pos].cnum = 10; // Set to Flying away sprite
 		}
 
 		return;
@@ -196,7 +201,7 @@ void animate_sprites(uint8_t pos)
 			break;
 		}
 
-		if (enemies[pos].angle == 2)
+		if (enemies[pos].angle == FACE_LEFT)
 		{
 			gfx_TransparentSprite(gfx_FlipSpriteY(temp_buffer, sprite_buff), enemies[pos].x, enemies[pos].y);
 		}
@@ -221,7 +226,7 @@ void animate_sprites(uint8_t pos)
 			break;
 		}
 
-		if (enemies[pos].angle == 4)
+		if (enemies[pos].angle == FACE_UP_LEFT)
 		{
 			gfx_TransparentSprite(gfx_FlipSpriteY(temp_buffer, sprite_buff), enemies[pos].x, enemies[pos].y);
 		}
@@ -246,7 +251,7 @@ void animate_sprites(uint8_t pos)
 			break;
 		}
 
-		if (enemies[pos].angle == 4)
+		if (enemies[pos].angle == FACE_UP_LEFT)
 		{
 			gfx_TransparentSprite(gfx_FlipSpriteY(temp_buffer, sprite_buff), enemies[pos].x, enemies[pos].y);
 		}
@@ -274,7 +279,7 @@ void animate_sprites(uint8_t pos)
 			break;
 		}
 
-		if (enemies[pos].angle == 4)
+		if (enemies[pos].angle == FACE_UP_LEFT)
 		{
 			gfx_TransparentSprite(gfx_FlipSpriteY(temp_buffer, sprite_buff), enemies[pos].x, enemies[pos].y);
 		}
@@ -285,7 +290,8 @@ void animate_sprites(uint8_t pos)
 
 		break;
 
-	case 7: // Shot Duck
+	/* Shot duck */
+	case 7: 
 
 		switch (enemies[pos].type)
 		{ // based on speeed
@@ -305,6 +311,7 @@ void animate_sprites(uint8_t pos)
 		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
 		break;
 
+	/* Ducks falling */
 	case 8: // Falling Duck 2
 
 		switch (enemies[pos].type)
@@ -345,6 +352,8 @@ void animate_sprites(uint8_t pos)
 		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
 		break;
 
+
+	/* Ducks Flying away */
 	case 10:
 		switch (enemies[pos].type)
 		{ // based on speeed
@@ -532,7 +541,7 @@ void update_enemies(void)
 					}
 					else
 					{
-						if (get_duck_hits_amount() >=  GAME_ADVANCE_THRESHOLD)
+						if (get_duck_hits_amount() >= GAME_ADVANCE_THRESHOLD)
 						{
 							// Manage the game
 							player.round++;
@@ -557,7 +566,7 @@ void update_enemies(void)
 
 					if (DUCK_FALLEN_AMOUNT == DUCK_AMOUNT)
 					{
-						dog_SetMode(DOG_PEEK_UP); // Pop 
+						dog_SetMode(DOG_PEEK_UP); // Pop
 						draw_dog_scene();
 					}
 
