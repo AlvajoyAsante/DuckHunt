@@ -6,6 +6,13 @@
 
 struct dog_t dog;
 
+enum DogMode
+{
+	DOG_HIDDEN = 0,
+	DOG_RUN_TO_CENTER = 1,
+	DOG_PEEK_UP = 2
+};
+
 /**
  * Sets the dog animation type
  * (run to the center, jump over the grass, and peek when a duck has been shot)
@@ -18,13 +25,13 @@ void dog_SetMode(uint8_t pos)
 
 	switch (pos)
 	{
-	case 1: // Run to the center.
+	case DOG_RUN_TO_CENTER:
 		dog.x = 32;
 		dog.y = 160;
 		dog.cnum = 1;
 		break;
 
-	case 2: // peek when duck is shot.
+	case DOG_PEEK_UP:
 		if (menu.opt == 1)
 		{
 			dog.cnum = 10;
@@ -197,14 +204,14 @@ void dog_Render(void)
 	back_buff = gfx_MallocSprite(70, 60);
 	gfx_GetSprite(back_buff, dog.x - 10, dog.y - 10);
 
-	if (dog.mode == 2)
+	if (dog.mode == DOG_PEEK_UP)
 	{
 		draw_back();
 	}
 
 	dog_animate();
 
-	if ((dog.mode == 1 && dog.tick == 3))
+	if ((dog.mode == DOG_RUN_TO_CENTER && dog.tick == 3))
 	{
 		/* Set the transparent color of the duck based on the player game mode (aka menu.opt) */
 		switch (menu.opt)
@@ -225,7 +232,7 @@ void dog_Render(void)
 		/* reset transparent color */
 		gfx_SetTransparentColor(0);
 	}
-	else if (dog.mode == 2)
+	else if (dog.mode == DOG_PEEK_UP)
 	{
 		draw_grass();
 	}
@@ -252,7 +259,7 @@ void dog_Update(void)
 
 	switch (dog.mode)
 	{
-	case 1: // run to the center.
+	case DOG_RUN_TO_CENTER:
 		if (dog.tick == 1)
 		{
 			if (dog.x == 100 / 2)
@@ -305,13 +312,12 @@ void dog_Update(void)
 			dog.cnum = 9;
 			dog.y = Goto_Pos(dog.y, 160, dog.speed + 2);
 			if (dog.y == 160)
-				dog.mode = 0;
+				dog.mode = DOG_HIDDEN;
 		}
 
 		break;
 
-	case 2: // peek up after bird shot.
-		// peek up
+	case DOG_PEEK_UP:
 		if (dog.tick == 1)
 		{
 			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
@@ -333,7 +339,7 @@ void dog_Update(void)
 			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
 
 			if (dog.y == dog.gotoY)
-				dog.mode = 0;
+				dog.mode = DOG_HIDDEN;
 		}
 		// peek back down
 		break;
@@ -345,7 +351,7 @@ void dog_Update(void)
  */
 void draw_dog_scene(void)
 {
-	while (dog.mode != 0)
+	while (dog.mode != DOG_HIDDEN)
 	{
 		dog_Render();
 		dog_Update();
