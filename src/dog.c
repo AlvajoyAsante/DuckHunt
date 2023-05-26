@@ -24,12 +24,7 @@ void dog_SetMode(uint8_t pos)
 		dog.cnum = 1;
 		break;
 
-	case 2: // Jump over grass.
-		dog.x = 80;
-		dog.y = 160;
-		break;
-
-	case 3: // peek when duck is shot.
+	case 2: // peek when duck is shot.
 		if (menu.opt == 1)
 		{
 			dog.cnum = 10;
@@ -40,20 +35,18 @@ void dog_SetMode(uint8_t pos)
 		}
 
 		dog.y = 159;
-		if (enemies[DUCK_FALLEN_ID].x < 91)
+
+		if (enemies[DUCK_FALLEN_ID].x > 231)
 		{
-			dog.x = 91;
+			dog.x = 231;
 		}
-		else if (enemies[DUCK_FALLEN_ID].x > 219)
+		else
 		{
-			dog.x = 219;
+			dog.x = enemies[DUCK_FALLEN_ID].x;
 		}
 
-		if (enemies[DUCK_FALLEN_ID].x < 91 && enemies[DUCK_FALLEN_ID].x > 219)
-		{
-			dog.x = 143;
-		}
-		dog.gotoY = dog.y - 20;
+		dog.gotoY = dog.y - 30;
+
 		break;
 	}
 }
@@ -143,17 +136,75 @@ static void dog_animate(void)
 	}
 }
 
+static void draw_back(void)
+{
+	gfx_sprite_t *temp = NULL;
+
+	// tree
+	temp = gfx_MallocSprite(bg_tree_width, bg_tree_height);
+	zx7_Decompress(temp, bg_tree_compressed);
+	gfx_TransparentSprite(temp, 44, 39);
+	free(temp);
+
+	// bush
+	temp = gfx_MallocSprite(bg_bush_width, bg_bush_height);
+	zx7_Decompress(temp, bg_bush_compressed);
+	gfx_TransparentSprite(temp, 218, 132);
+	free(temp);
+}
+
+static void draw_grass(void)
+{
+	gfx_sprite_t *temp = NULL;
+
+	// Grass
+	temp = gfx_MallocSprite(bg_ground_width, bg_ground_height);
+	zx7_Decompress(temp, bg_ground_compressed);
+	gfx_TransparentSprite(temp, 32, 156);
+
+	free(temp);
+
+	// bullet board
+	temp = gfx_MallocSprite(bullet_board_width, bullet_board_height);
+	zx7_Decompress(temp, bullet_board_compressed);
+	gfx_TransparentSprite(temp, 52, 209);
+	free(temp);
+
+	// kill board
+	temp = gfx_MallocSprite(kill_board_width, kill_board_height);
+	zx7_Decompress(temp, kill_board_compressed);
+	gfx_TransparentSprite(temp, 92, 209);
+	free(temp);
+
+	// score board
+	temp = gfx_MallocSprite(score_board_width, score_board_height);
+	zx7_Decompress(temp, score_board_compressed);
+	gfx_TransparentSprite(temp, 220, 209);
+	free(temp);
+
+	// Print Score Board Information
+	update_scene();
+}
+
 /**
  * Draws the dog based on the sprite number. (needs work)
  */
 void dog_Render(void)
 {
-	gfx_sprite_t *back_buff = gfx_MallocSprite(70, 60);
+
+	gfx_sprite_t *back_buff = NULL;
+
+	back_buff = gfx_MallocSprite(70, 60);
 	gfx_GetSprite(back_buff, dog.x - 10, dog.y - 10);
+
+	if (dog.mode == 2)
+	{
+		draw_back();
+	}
 
 	dog_animate();
 
-	if (dog.mode == 1 && dog.tick == 3)
+	if ((dog.mode == 1 && dog.tick == 3))
 	{
 		/* Set the transparent color of the duck based on the player game mode (aka menu.opt) */
 		switch (menu.opt)
@@ -174,8 +225,13 @@ void dog_Render(void)
 		/* reset transparent color */
 		gfx_SetTransparentColor(0);
 	}
+	else if (dog.mode == 2)
+	{
+		draw_grass();
+	}
 
 	gfx_Blit(1);
+
 	gfx_Sprite(back_buff, dog.x - 10, dog.y - 10);
 	free(back_buff);
 }
@@ -254,50 +310,27 @@ void dog_Update(void)
 
 		break;
 
-	case 2: // Jump over grass.
-		if (dog.tick == 1)
-		{
-			dog.x = Goto_Pos(dog.x, 130, dog.speed);
-			if (dog.x == 130)
-				dog.tick++;
-		}
-
-		if (dog.tick == 2)
-		{
-			dog.y = Goto_Pos(dog.y, 109, dog.speed);
-			if (dog.y == 109)
-				dog.tick++;
-		}
-
-		if (dog.tick == 3)
-		{
-			dog.y = Goto_Pos(dog.y, 160, dog.speed);
-			if (dog.y == 160)
-				dog.mode = 0;
-		}
-
-		break;
-
-	case 3: // peek up after bird shot.
+	case 2: // peek up after bird shot.
 		// peek up
 		if (dog.tick == 1)
 		{
-			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed);
+			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
 
 			if (dog.y == dog.gotoY)
 			{
 				dog.tick++;
-				dog.gotoY = dog.y + 20;
+				dog.gotoY = dog.y + 30;
+				delay(ANIMATE_TIMER_MAX * 50);
 			}
 		}
 
-		delay(ANIMATE_TIMER_MAX * 50);
+		//
 
 		// Go back down
 		if (dog.tick == 2)
 		{
 
-			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed);
+			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
 
 			if (dog.y == dog.gotoY)
 				dog.mode = 0;
@@ -312,9 +345,6 @@ void dog_Update(void)
  */
 void draw_dog_scene(void)
 {
-
-	dog_SetMode(1);
-
 	while (dog.mode != 0)
 	{
 		dog_Render();
