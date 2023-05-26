@@ -5,7 +5,7 @@
 extern "C" {
 #endif
 
-#define sizeof_palette 60
+#define sizeof_palette 52
 #define palette (DUCKSPT_appvar[0])
 #define dog_palette_offset 0
 #define dog_bird_1_width 43
@@ -271,28 +271,20 @@ extern "C" {
 #define DUCKSPT_game_score_board_compressed_index 65
 #define score_board_compressed DUCKSPT_appvar[65]
 #define menu_palette_offset 0
-#define cr_text_width 200
-#define cr_text_height 10
-#define DUCKSPT_menu_cr_text_compressed_index 66
-#define cr_text_compressed DUCKSPT_appvar[66]
-#define game_type_text_width 115
-#define game_type_text_height 39
-#define DUCKSPT_menu_game_type_text_compressed_index 67
-#define game_type_text_compressed DUCKSPT_appvar[67]
-#define game_types_width 52
-#define game_types_height 39
-#define DUCKSPT_menu_game_types_compressed_index 68
-#define game_types_compressed DUCKSPT_appvar[68]
+#define cr_symbol_width 8
+#define cr_symbol_height 8
+#define DUCKSPT_menu_cr_symbol_compressed_index 66
+#define cr_symbol_compressed DUCKSPT_appvar[66]
 #define menu_arrow_width 12
 #define menu_arrow_height 10
-#define DUCKSPT_menu_menu_arrow_compressed_index 69
-#define menu_arrow_compressed DUCKSPT_appvar[69]
+#define DUCKSPT_menu_menu_arrow_compressed_index 67
+#define menu_arrow_compressed DUCKSPT_appvar[67]
 #define Title_Menu_width 143
 #define Title_Menu_height 65
-#define DUCKSPT_menu_Title_Menu_compressed_index 70
-#define Title_Menu_compressed DUCKSPT_appvar[70]
-#define DUCKSPT_entries_num 71
-extern unsigned char *DUCKSPT_appvar[71];
+#define DUCKSPT_menu_Title_Menu_compressed_index 68
+#define Title_Menu_compressed DUCKSPT_appvar[68]
+#define DUCKSPT_entries_num 69
+extern unsigned char *DUCKSPT_appvar[69];
 unsigned char DUCKSPT_init(void);
 
 #ifdef __cplusplus

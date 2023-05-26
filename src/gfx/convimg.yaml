@@ -103,9 +103,7 @@ converts:
     compress: zx7
     transparent-color-index: 0
     images:
-      - MENU/cr_text.png
-      - MENU/game_type_text.png
-      - MENU/game_types.png
+      - MENU/cr_symbol.png
       - MENU/menu_arrow.png
       - MENU/Title_Menu.png
 

@@ -44,39 +44,48 @@ bool init_menu(void)
 	gfx_TransparentSprite(temp_sprite, 86, 32);
 	free(temp_sprite);
 
-	// Render the game modes text
+	/* // Render the game modes text
 	temp_sprite = gfx_MallocSprite(game_types_width, game_types_height);
 	zx7_Decompress(temp_sprite, game_types_compressed);
 	gfx_TransparentSprite(temp_sprite, 89, 132);
-	free(temp_sprite);
+	free(temp_sprite); */
 
 	// Render the game modes
-	temp_sprite = gfx_MallocSprite(game_type_text_width, game_type_text_height);
+	/* temp_sprite = gfx_MallocSprite(game_type_text_width, game_type_text_height);
 	zx7_Decompress(temp_sprite, game_type_text_compressed);
 	gfx_TransparentSprite(temp_sprite, 168, 132);
-	free(temp_sprite);
+	free(temp_sprite); */
 
-	// Renders nintendo text
-	temp_sprite = gfx_MallocSprite(cr_text_width, cr_text_height);
-	zx7_Decompress(temp_sprite, cr_text_compressed);
-	gfx_TransparentSprite(temp_sprite, (LCD_WIDTH - cr_text_width) / 2, 214);
-	free(temp_sprite);
-
-	// Show version of program
-	gfx_SetTextFGColor(1);
-	gfx_SetTextXY(1, 230);
-	gfx_PrintString(DUCKHUNT_VERSION);
+	gfx_SetTextFGColor(6); // Orange
+	gfx_SetTextXY(89, 133);
+	gfx_PrintString("GAME  A     1  DUCK");
+	gfx_SetTextXY(89, 149);
+	gfx_PrintString("GAME  B     2  DUCK");
+	gfx_SetTextXY(89, 164);
+	gfx_PrintString("GAME  C     CLAY  SHOOTING");
 
 	// Show High Score
 	gfx_SetTextFGColor(9); // Green
 	gfx_SetTextXY(85, 190);
 	gfx_PrintString("TOP  SCORE  =  ");
-	gfx_PrintInt(0, 5);
+	gfx_PrintInt(game.high_score, 5);
 
-	// Show Author name
-	gfx_SetTextFGColor(1); // White
-	gfx_SetTextXY(100, 228);
-	gfx_PrintString("Port by Alvajoy123");
+	// Renders nintendo text
+	temp_sprite = gfx_MallocSprite(cr_symbol_width, cr_symbol_height);
+	zx7_Decompress(temp_sprite, cr_symbol_compressed);
+	gfx_TransparentSprite(temp_sprite, (LCD_WIDTH - (gfx_GetStringWidth(COPYRIGHT_TEXT) + cr_symbol_width)) / 2, 213);
+	free(temp_sprite);
+
+	gfx_SetTextScale(1, 1);
+	gfx_SetTextFGColor(1);
+	gfx_SetTextXY((LCD_WIDTH - (gfx_GetStringWidth(COPYRIGHT_TEXT) - (cr_symbol_width + 4) )) / 2, 214);
+	gfx_PrintString(COPYRIGHT_TEXT);
+
+	// Show version of program
+	gfx_SetTextScale(1, 1);
+	gfx_SetTextFGColor(1);
+	gfx_SetTextXY((LCD_WIDTH - gfx_GetStringWidth(DUCKHUNT_VERSION)) / 2, 228);
+	gfx_PrintString(DUCKHUNT_VERSION);
 
 	temp_sprite = gfx_MallocSprite(menu_arrow_width, menu_arrow_height);
 	zx7_Decompress(temp_sprite, menu_arrow_compressed);
