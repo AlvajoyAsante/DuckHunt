@@ -69,8 +69,6 @@ void update_scene(void)
 	}
 
 	// Hit panel
-	// gfx_SetColor(2);
-	// gfx_FillRectangle(127, 213, 80, 15);
 
 	/* Shots Hit */
 	temp = gfx_MallocSprite(panel_icon_1_width, panel_icon_1_height);
@@ -88,7 +86,9 @@ void update_scene(void)
 
 		gfx_TransparentSprite(temp, 127 + (i * (panel_icon_1_width + 1)), 213);
 
-		if ((GAME_TOTAL_HITS != DOG_RUN_TO_CENTER && GAME_TOTAL_HITS != DOG_HIDDEN) &&  game.start == true)
+
+		/* Blinking */
+		if ((game.start == false && GAME_TOTAL_HITS != DOG_RUN_TO_CENTER) || (game.start == true && GAME_TOTAL_HITS != DOG_HIDDEN))
 		{
 			if (get_duck_hits_amount() == i)
 			{
@@ -181,6 +181,17 @@ void update_scene(void)
 	}
 }
 
+static int count_digits(int number)
+{
+	int count = 0;
+	while (number > 0)
+	{
+		number /= 10;
+		count++;
+	}
+	return count;
+}
+
 /**
  * This is used to draw the scene for the game.
  * It depends on the me variable (menu.opt).
@@ -265,21 +276,24 @@ void draw_scene(void)
 		// Print Round Number
 		gfx_sprite_t *back_buff = gfx_MallocSprite(fly_away_width, fly_away_height * 2);
 
-		gfx_GetSprite(back_buff, 124, 103);
+		gfx_GetSprite(back_buff, (LCD_WIDTH - fly_away_width) / 2, 103);
 
-		ui_rectangle(124, 103, fly_away_width, fly_away_height * 2);
+		ui_rectangle((LCD_WIDTH - fly_away_width) / 2, 103, fly_away_width, fly_away_height * 2);
 
 		gfx_SetTextFGColor(1);
-		gfx_SetTextXY(141, 110);
+		gfx_SetTextXY((LCD_WIDTH - gfx_GetStringWidth("ROUND")) / 2, 110);
 		gfx_PrintString("ROUND");
-		gfx_SetTextXY(155, 122);
+
+		
+
+		gfx_SetTextXY((LCD_WIDTH - (8 * count_digits(player.round))) / 2, 123);
 		gfx_PrintInt(player.round, 0);
 
 		gfx_Blit(1);
 
 		delay(1000);
 
-		gfx_Sprite(back_buff, 124, 103);
+		gfx_Sprite(back_buff, (LCD_WIDTH - fly_away_width) / 2, 103);
 		free(back_buff);
 
 		// Render dog
