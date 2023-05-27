@@ -3,8 +3,7 @@
  * Program Name: DUCKHUNT
  * Author: Alvajoy 'Alvajoy Asante' 123
  * License: GNU 3
- * Description: A CLONE OF POPULAR NES GAME DUCKHUNT
- * Notes: "Please ask for permission before any use of Authors code"
+ * Description: A NES clone of Duck Hunt
  *--------------------------------------
  */
 
