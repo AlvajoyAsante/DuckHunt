@@ -18,13 +18,28 @@
 /* Game Information */
 struct game_t
 {
+    // Determines wethier the game started
     bool start;
+
+    // Amount of enemies fallen
     int amount_fallen;
+
+    // Last fallen enemy array index 
     int fallen_id;
+
+    // Amount of enemies in game
     int enemies_amount;
+
+    // Overall game high score
     int high_score;
+
+    // amount of duck killed to advance to the next round
     int advance_amount;
+
+    // Enemy hit tracker use HUD
     bool duck_hits[10];
+    
+    // total hit attempts
     int total_hits;
 };
 extern struct game_t game;
