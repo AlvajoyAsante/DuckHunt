@@ -411,7 +411,6 @@ void animate_sprites(uint8_t pos)
 		break;
 	}
 
-	// free(temp_buffer);
 	free(sprite_buff);
 }
 
@@ -421,15 +420,20 @@ void update_enemies(void)
 	{
 		if (enemies[i].active)
 		{
+			// Fly away init
+			/* If there zero bullets left */
 			if (player.bullets < 1)
 			{
+				/* Check if the duck is not shot  */
 				if (!enemies[i].shot)
 				{
 					enemies[i].angle = DUCK_FALLING;
-					enemies[i].gotoY = -20;
 					enemies[i].gotoX = enemies[i].x;
+					enemies[i].gotoY = -20;
 					enemies[i].speed = 4;
 					enemies[i].fly_away = 1;
+
+					/* Set the costume to 10 */
 					if (enemies[i].cnum < 10)
 					{
 						enemies[i].cnum = 10;
@@ -441,7 +445,6 @@ void update_enemies(void)
 			/* Checks if the X position of duck is at its dest point */
 			if (enemies[i].x != enemies[i].gotoX)
 			{
-
 				if (enemies[i].x < enemies[i].gotoX)
 				{
 					enemies[i].x += enemies[i].speed;
@@ -567,7 +570,7 @@ void update_enemies(void)
 
 					if (DUCK_FALLEN_AMOUNT == DUCK_AMOUNT)
 					{
-						dog_SetMode(DOG_PEEK_UP); // Pop
+						dog_SetMode(DOG_PEEK_UP); // Pop up
 						draw_dog_scene();
 					}
 
@@ -703,9 +706,7 @@ void init_enemies(uint8_t amount)
 		enemies[i].shot = false;
 		enemies[i].angle = FACE_RIGHT; // flying angle
 
-		/* Set Duck speed based on input level */
-
-		/* Advanced amount */
+		/* Setting duck speed */
 		if (player.round >= 1 && player.round <= 10)
 		{
 			speed = randInt(1, 3);
@@ -730,8 +731,7 @@ void init_enemies(uint8_t amount)
 		enemies[i].speed = speed;
 
 		/* Sets the duck type */
-		enemies[i].type = randInt(1,3);
-		
+		enemies[i].type = randInt(1, 3);
 
 		/* Setting Up the pionts */
 		switch (enemies[i].type)
