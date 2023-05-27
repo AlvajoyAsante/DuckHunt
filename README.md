@@ -45,7 +45,7 @@ Note: If your OS is 5.5 or higher, use the arTIfiCE exploit tool to run the prog
 
 ![](./docs/CONCEPTS/menu.png) ![](./docs/CONCEPTS/game_a.png)
 
-![](./docs/CONCEPTS/game_b.png) ![](.docs/../doc/CONCEPTS/game_c.png)
+![](./docs/CONCEPTS/game_b.png) ![](./docs/CONCEPTS/game_c.png)
 
 ## Development
 Current State:
