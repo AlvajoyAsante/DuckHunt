@@ -83,9 +83,9 @@ static void shoot(void)
 					enemies[i].gotoY = 140;
 					enemies[i].gotoX = enemies[i].x;
 					enemies[i].speed = 4;
-					enemies[i].shot = 1;
-					enemies[i].cnum = 7; // shot
-					enemies[i].animate = ANIMATE_TIMER_MAX;
+					enemies[i].shot = true;
+					enemies[i].cnum = 7; // costume shot
+					enemies[i].animate = 0;
 
 					/* Determine Score */
 					player.score += returnReward(i);
@@ -93,12 +93,7 @@ static void shoot(void)
 					/* Register Hit duck */
 					game.duck_hits[get_duck_hits_amount()] = 1;
 					
-					DUCK_FALLEN_AMOUNT++;
-					
-
-					update_enemies();
-
-					
+					DUCK_FALLEN_AMOUNT++;					
 				}
 			}
 		}
