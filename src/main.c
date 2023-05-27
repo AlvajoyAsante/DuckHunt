@@ -48,7 +48,9 @@ int main(void)
 	// Draw dog scene here
 	draw_dog_scene();
 
-	do
+	game.start = true;
+
+	while (player_keys())
 	{
 		get_buffer_layer();
 
@@ -64,7 +66,9 @@ int main(void)
 		free_buffer_layer();
 
 		update_enemies();
-	} while (player_keys());
+	} 
+
+	game.start = false;
 
 	// goto menu;
 
