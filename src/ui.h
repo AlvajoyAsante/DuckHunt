@@ -17,6 +17,7 @@
 
 struct game_t
 {
+    bool start;
     int amount_fallen;
     int fallen_id;
     int enemies_amount;

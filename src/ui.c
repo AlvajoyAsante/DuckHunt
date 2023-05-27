@@ -69,28 +69,39 @@ void update_scene(void)
 	}
 
 	// Hit panel
-	gfx_SetColor(2);
-	gfx_FillRectangle(127, 213, 80, 15);
+	// gfx_SetColor(2);
+	// gfx_FillRectangle(127, 213, 80, 15);
 
 	/* Shots Hit */
+	temp = gfx_MallocSprite(panel_icon_1_width, panel_icon_1_height);
 
 	for (int i = 0; i < 10; i++)
 	{
 		if (game.duck_hits[i])
 		{
-			gfx_SetColor(1);
+			zx7_Decompress(temp, panel_icon_2_compressed);
 		}
 		else
 		{
-			gfx_SetColor(5);
+			zx7_Decompress(temp, panel_icon_1_compressed);
 		}
 
-		/* if (game.duck_hits[i])
-		{
-		} */
+		gfx_TransparentSprite(temp, 127 + (i * (panel_icon_1_width + 1)), 213);
 
-		gfx_FillRectangle(127 + (i * (7 + 1)), 213, 7, 7);
+		if ((GAME_TOTAL_HITS != DOG_RUN_TO_CENTER && GAME_TOTAL_HITS != DOG_HIDDEN) || game.start == true)
+		{
+			if (get_duck_hits_amount() == i)
+			{
+				if (randInt(0, 1))
+				{
+					gfx_SetColor(2);
+					gfx_FillRectangle(127 + (i * (7 + 1)), 213, 7, 7);
+				}
+			}
+		}
 	}
+
+	free(temp);
 
 	/* Advanced amount */
 	if (player.round >= 1 && player.round <= 10)
@@ -114,11 +125,18 @@ void update_scene(void)
 		GAME_ADVANCE_THRESHOLD = 10;
 	}
 
-	gfx_SetColor(6);
+	// gfx_SetColor(6);
+
+	temp = gfx_MallocSprite(panel_icon_3_width, panel_icon_3_height);
+	zx7_Decompress(temp, panel_icon_3_compressed);
+
 	for (int i = 0; i < GAME_ADVANCE_THRESHOLD; i++)
 	{
-		gfx_FillRectangle(127 + (i * (7 + 1)), 221, 7, 7);
+		gfx_TransparentSprite(temp, 127 + (i * (panel_icon_3_width + 1)), 221);
+		// gfx_FillRectangle(127 + (i * (7 + 1)), 221, 7, 7);
 	}
+
+	free(temp);
 
 	// Draw Score
 

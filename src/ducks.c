@@ -434,7 +434,7 @@ void update_enemies(void)
 					if (enemies[i].cnum < 10)
 					{
 						enemies[i].cnum = 10;
-						game.duck_hits[GAME_TOTAL_HITS + i] = 0;
+						game.duck_hits[get_duck_hits_amount()] = 0;
 					}
 				}
 			}
