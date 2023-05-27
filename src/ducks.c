@@ -553,6 +553,8 @@ void update_enemies(void)
 							reset_duck_hits();
 
 							draw_scene();
+
+							init_enemies(menu.opt);
 							return;
 						}
 						else
@@ -706,11 +708,11 @@ void init_enemies(uint8_t amount)
 		/* Advanced amount */
 		if (player.round >= 1 && player.round <= 10)
 		{
-			speed = randInt(1, 2);
+			speed = randInt(1, 3);
 		}
 		else if (player.round >= 11 && player.round <= 12)
 		{
-			speed = randInt(2, 4);
+			speed = randInt(2, 5);
 		}
 		else if (player.round >= 13 && player.round <= 14)
 		{
@@ -718,7 +720,7 @@ void init_enemies(uint8_t amount)
 		}
 		else if (player.round >= 15 && player.round <= 19)
 		{
-			speed = randInt(3, 8);
+			speed = randInt(4, 7);
 		}
 		else
 		{
@@ -727,19 +729,9 @@ void init_enemies(uint8_t amount)
 
 		enemies[i].speed = speed;
 
-		/* Sets the duck type based on the set speed */
-		if (enemies[i].speed <= 3)
-		{
-			enemies[i].type = 1;
-		}
-		else if (enemies[i].speed > 3 && enemies[i].speed <= 6)
-		{
-			enemies[i].type = 2;
-		}
-		else if (enemies[i].speed > 6)
-		{
-			enemies[i].type = 3;
-		}
+		/* Sets the duck type */
+		enemies[i].type = randInt(1,3);
+		
 
 		/* Setting Up the pionts */
 		switch (enemies[i].type)
