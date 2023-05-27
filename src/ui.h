@@ -39,9 +39,7 @@ void reset_duck_hits(void);
 int get_duck_hits_amount(void);
 
 void get_buffer_layer(void);
-
 void draw_buffer_layer(void);
-
 void draw_duck_buffer_layer(void);
 
 void ui_rectangle(int x, int y, int w, int h);

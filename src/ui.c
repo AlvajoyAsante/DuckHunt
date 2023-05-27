@@ -68,33 +68,62 @@ void update_scene(void)
 		free(temp);
 	}
 
-	// Hit panel
+	/* Hit Panel */
 
-	/* Shots Hit */
 	temp = gfx_MallocSprite(panel_icon_1_width, panel_icon_1_height);
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (game.duck_hits[i])
+		if (menu.opt < 3)
 		{
-			zx7_Decompress(temp, panel_icon_2_compressed);
+			if (game.duck_hits[i])
+			{
+				zx7_Decompress(temp, panel_icon_2_compressed);
+			}
+			else
+			{
+				zx7_Decompress(temp, panel_icon_1_compressed);
+			}
+
+			gfx_TransparentSprite(temp, 127 + (i * (panel_icon_1_width + 1)), 213);
+
+			/* Blinking */
+			if (dog.mode != DOG_RUN_TO_CENTER && game.start == true)
+			{
+				if (get_duck_hits_amount() == i)
+				{
+					if (randInt(0, 1))
+					{
+						gfx_SetColor(2);
+						gfx_FillRectangle(127 + (i * (8)), 213, 7, 7);
+					}
+				}
+			}
 		}
 		else
 		{
-			zx7_Decompress(temp, panel_icon_1_compressed);
-		}
-
-		gfx_TransparentSprite(temp, 127 + (i * (panel_icon_1_width + 1)), 213);
-
-		/* Blinking */
-		if (dog.mode != DOG_RUN_TO_CENTER && game.start == true)
-		{
-			if (get_duck_hits_amount() == i)
+			if (game.duck_hits[i])
 			{
-				if (randInt(0, 1))
+				// zx7_Decompress(temp, panel_icon_2_compressed);
+				gfx_SetColor(16);
+			}
+			else
+			{
+				// zx7_Decompress(temp, panel_icon_1_compressed);
+				gfx_SetColor(1);
+			}
+
+			gfx_FillRectangle(127 + (i * (panel_icon_1_width + 1)), 213, 7, 7);
+
+			if (game.start == true)
+			{
+				if (get_duck_hits_amount() == i)
 				{
-					gfx_SetColor(2);
-					gfx_FillRectangle(127 + (i * (8)), 213, 7, 7);
+					if (randInt(0, 1))
+					{
+						gfx_SetColor(2);
+						gfx_FillRectangle(127 + (i * (8)), 213, 7, 7);
+					}
 				}
 			}
 		}
