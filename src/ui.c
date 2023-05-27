@@ -88,7 +88,7 @@ void update_scene(void)
 
 		gfx_TransparentSprite(temp, 127 + (i * (panel_icon_1_width + 1)), 213);
 
-		if ((GAME_TOTAL_HITS != DOG_RUN_TO_CENTER && GAME_TOTAL_HITS != DOG_HIDDEN) || game.start == true)
+		if ((GAME_TOTAL_HITS != DOG_RUN_TO_CENTER && GAME_TOTAL_HITS != DOG_HIDDEN) &&  game.start == true)
 		{
 			if (get_duck_hits_amount() == i)
 			{
@@ -360,15 +360,15 @@ void init_duckhunt(uint8_t type)
 	switch (type)
 	{
 	case 1:
-		init_enemies(1, 1);
+		init_enemies(1);
 		break;
 
 	case 2:
-		init_enemies(2, 3);
+		init_enemies(2);
 		break;
 
 	case 3:
-		init_enemies(2, 1);
+		init_enemies(2);
 		break;
 	}
 }
