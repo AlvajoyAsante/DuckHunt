@@ -4,6 +4,7 @@
 #include <tice.h>
 #include <graphx.h>
 
+/* Enemies information */
 struct enemies_t
 {
 	// position of duck
@@ -41,20 +42,23 @@ struct enemies_t
 };
 extern struct enemies_t enemies[5];
 
-void SetCostume(uint8_t pos, uint8_t num);
-
+/**
+ * @brief Renders enemies information
+ * 
+ */
 void draw_enemies(void);
 
+/**
+ * @brief Updates enemies information
+ * 
+ */
 void update_enemies(void);
 
-void animate_sprites(uint8_t pos);
-
+/**
+ * @brief Initialise enemies
+ * 
+ * @param amount amount of enemies you want to Initialise
+ */
 void init_enemies(uint8_t amount);
-
-int Goto_Pos(int pos, int Dpos, uint8_t speed);
-
-int Set_Goto_Y(void);
-
-int Set_Goto_X(void);
 
 #endif

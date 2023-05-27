@@ -18,7 +18,31 @@ enum DUCK_ANGLE
 struct enemies_t enemies[5];
 
 /* Duck Animations */
-static void animate(uint8_t pos)
+static int Set_Goto_Y(void)
+{ // for game A and B
+	if (randInt(0, 1))
+	{
+		return 8;
+	}
+	else
+	{
+		return 167 - 35;
+	}
+}
+
+static int Set_Goto_X(void)
+{
+	if (randInt(0, 1))
+	{
+		return 33;
+	}
+	else
+	{
+		return 254;
+	}
+}
+
+static void enemies_manage_cnum(uint8_t pos)
 {
 
 	if (enemies[pos].cnum == 3 || enemies[pos].cnum == 6)
@@ -115,14 +139,14 @@ angle:
 }
 
 /* Manages the animations of every duck  */
-void animate_sprites(uint8_t pos)
+static void enemies_render_sprites(uint8_t pos)
 {
 	gfx_sprite_t *temp_buffer;
 	gfx_sprite_t *sprite_buff = gfx_MallocSprite(40, 40);
 
-	if (enemies[pos].animate >= ANIMATE_TIMER_MAX)
+	if (enemies[pos].animate >= TIMER_ANIMATE_MAX)
 	{
-		animate(pos);
+		enemies_manage_cnum(pos);
 	}
 
 	/* Render ducks based on sprites */
@@ -440,21 +464,6 @@ static int get_inactive_shot_enemies(void)
 	return tick;
 }
 
-static int get_inactive_flyaway_enemies(void)
-{
-	int tick = 0;
-
-	for (int i = 0; i < DUCK_AMOUNT; i++)
-	{
-		if (!enemies[i].active && enemies[i].fly_away == true)
-		{
-			tick++;
-		}
-	}
-
-	return tick;
-}
-
 void update_enemies(void)
 {
 	for (int i = 0; i < DUCK_AMOUNT; i++)
@@ -562,7 +571,7 @@ void update_enemies(void)
 			}
 
 			/* Animation timer */
-			if (enemies[i].animate < ANIMATE_TIMER_MAX)
+			if (enemies[i].animate < TIMER_ANIMATE_MAX)
 			{
 				enemies[i].animate++; // Update the timer
 			}
@@ -577,7 +586,7 @@ void update_enemies(void)
 	if (get_inactive_enemies() == DUCK_AMOUNT)
 	{
 
-		if (menu.opt < 3)
+		if (menu.option < 3)
 		{
 			/* Check if player has ran through 10 ducks */
 			if (GAME_TOTAL_HITS > 9)
@@ -596,7 +605,7 @@ void update_enemies(void)
 
 					/* Init new ducks to fly */
 					GAME_TOTAL_HITS = 0;
-					init_enemies(menu.opt);
+					init_enemies(menu.option);
 					return;
 				}
 				else
@@ -613,7 +622,7 @@ void update_enemies(void)
 				draw_dog_scene();
 			}
 
-			init_enemies(menu.opt);
+			init_enemies(menu.option);
 		}
 		else
 		{
@@ -638,13 +647,13 @@ void draw_enemies(void)
 		if (enemies[i].active)
 		{
 			/* Animate the duck sprites */
-			animate_sprites(i);
+			enemies_render_sprites(i);
 
 			/* Render the grass if the duck is a certain */
 			if (enemies[i].y >= 134 || enemies[i].y <= 8)
 			{
-				/* Set the transparent color of the duck based on the player game mode (aka menu.opt) */
-				switch (menu.opt)
+				/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
+				switch (menu.option)
 				{
 				case 1:
 					gfx_SetTransparentColor(4);
@@ -666,42 +675,6 @@ void draw_enemies(void)
 				gfx_SetTransparentColor(0);
 			}
 		}
-	}
-}
-
-/* routines below!! */
-/**
- * @brief this function returns position of a point based on the given position
- *
- * @param pos postion
- * @param Dpos desition position
- * @param speed speed of obeject movement
- * @return int the next step in-order to move on
- */
-int Goto_Pos(int pos, int Dpos, uint8_t speed)
-{
-	/* Checks if the start position does not eqaul to the desitionation position */
-	if (pos != Dpos)
-	{
-		/* Checks if the postion is speed distance */
-		if (pos - Dpos <= speed && pos - Dpos >= -(speed))
-			return Dpos;
-
-		/* Checks if the position is less than the destination position */
-		if (pos < Dpos)
-		{
-			pos += speed;
-		}
-		else if (pos > Dpos) // Checks if the position is greater than position.
-		{
-			pos -= speed;
-		}
-
-		return pos;
-	}
-	else
-	{
-		return pos;
 	}
 }
 
@@ -782,29 +755,5 @@ void init_enemies(uint8_t amount)
 			enemies[i].points = 1500;
 			break;
 		}
-	}
-}
-
-int Set_Goto_Y(void)
-{ // for game A and B
-	if (randInt(0, 1))
-	{
-		return 8;
-	}
-	else
-	{
-		return 167 - 35;
-	}
-}
-
-int Set_Goto_X(void)
-{
-	if (randInt(0, 1))
-	{
-		return 33;
-	}
-	else
-	{
-		return 254;
 	}
 }

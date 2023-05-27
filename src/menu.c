@@ -17,7 +17,7 @@ bool init_menu(void)
 	/* Setting up menu GUI */
 	gfx_FillScreen(2); // Black
 
-	menu.opt = 1;
+	menu.option = 1;
 
 	/* Render Game Title */
 	temp_sprite = gfx_MallocSprite(Title_Menu_width, Title_Menu_height);
@@ -75,18 +75,18 @@ bool init_menu(void)
 		switch (key)
 		{
 		case kb_Up:
-			if (menu.opt > 1)
+			if (menu.option > 1)
 			{
-				menu.opt--;
+				menu.option--;
 			}
 
 			delay(65);
 			break;
 
 		case kb_Down:
-			if (menu.opt < 3)
+			if (menu.option < 3)
 			{
-				menu.opt++;
+				menu.option++;
 			}
 
 			delay(65);
@@ -108,7 +108,7 @@ bool init_menu(void)
 		}
 
 		/* Render arrow sprite based on menu position */
-		switch (menu.opt)
+		switch (menu.option)
 		{
 		case 1:
 			gfx_TransparentSprite(temp_sprite, 61, 131);
@@ -134,7 +134,7 @@ bool init_menu(void)
 	free(temp_sprite);
 
 	/* Start the game based on menu option */
-	init_duckhunt(menu.opt);
+	init_duckhunt();
 
 	/* Return true if use want to play*/
 	return true;

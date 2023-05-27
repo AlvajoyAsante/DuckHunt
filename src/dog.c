@@ -25,11 +25,11 @@ void dog_SetMode(uint8_t mode)
 		break;
 
 	case DOG_PEEK_UP:
-		if (menu.opt == 1)
+		if (menu.option == 1)
 		{
 			dog.cnum = 10;
 		}
-		else if (menu.opt == 2)
+		else if (menu.option == 2)
 		{
 			dog.cnum = 11;
 		}
@@ -83,7 +83,7 @@ static void dog_manage_cnum(void)
 
 static void dog_animate(void)
 {
-	if (dog.animate == ANIMATE_TIMER_MAX)
+	if (dog.animate == TIMER_ANIMATE_MAX)
 	{
 		dog_manage_cnum();
 	}
@@ -189,7 +189,7 @@ static void draw_grass(void)
 /**
  * Draws the dog based on the sprite number. (needs work)
  */
-void dog_Render(void)
+static void dog_Render(void)
 {
 
 	gfx_sprite_t *back_buff = NULL;
@@ -206,8 +206,8 @@ void dog_Render(void)
 
 	if ((dog.mode == DOG_RUN_TO_CENTER && dog.tick == 3))
 	{
-		/* Set the transparent color of the duck based on the player game mode (aka menu.opt) */
-		switch (menu.opt)
+		/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
+		switch (menu.option)
 		{
 		case 1:
 			gfx_SetTransparentColor(4);
@@ -239,9 +239,9 @@ void dog_Render(void)
 /**
  * Updates the dog movements based on the dog mode.
  */
-void dog_Update(void)
+static void dog_Update(void)
 {
-	if (dog.animate < ANIMATE_TIMER_MAX)
+	if (dog.animate < TIMER_ANIMATE_MAX)
 	{
 		dog.animate++;
 	}
@@ -258,11 +258,11 @@ void dog_Update(void)
 			if (dog.x == 100 / 2)
 			{
 				dog.cnum = 5;
-				dog.animate = ANIMATE_TIMER_MAX;
+				dog.animate = TIMER_ANIMATE_MAX;
 				for (int i = 0; i < 3; i++)
 				{
 					dog_Render();
-					delay(ANIMATE_TIMER_MAX * 50);
+					delay(TIMER_ANIMATE_MAX * 50);
 				}
 				dog.cnum = 1;
 				dog.x++;
@@ -281,16 +281,16 @@ void dog_Update(void)
 			if (dog.x == 100)
 			{
 				dog.cnum = 5;
-				dog.animate = ANIMATE_TIMER_MAX;
+				dog.animate = TIMER_ANIMATE_MAX;
 				for (int i = 0; i < 3; i++)
 				{
 					dog_Render();
-					delay(ANIMATE_TIMER_MAX * 50);
+					delay(TIMER_ANIMATE_MAX * 50);
 				}
 
 				dog.cnum = 7;
 				dog_Render();
-				delay(ANIMATE_TIMER_MAX * 50);
+				delay(TIMER_ANIMATE_MAX * 50);
 			}
 
 			dog.cnum = 8;
@@ -322,7 +322,7 @@ void dog_Update(void)
 				dog.gotoY = dog.y + 30;
 
 				/* Pause when the dog reaches the top */
-				delay(ANIMATE_TIMER_MAX * 50);
+				delay(TIMER_ANIMATE_MAX * 50);
 			}
 		}
 

@@ -4,6 +4,7 @@
 #include <tice.h>
 #include <graphx.h>
 
+/* Dog modes */
 enum DogMode
 {
 	DOG_HIDDEN = 0,
@@ -11,6 +12,7 @@ enum DogMode
 	DOG_PEEK_UP = 2
 };
 
+/* Dog infomation */
 struct dog_t
 {
 	// dog position
@@ -38,16 +40,17 @@ struct dog_t
 };
 extern struct dog_t dog;
 
-// sets dog mode.
+/**
+ * @brief Sets the dog animation
+ *
+ * @param mode DogMode enum
+ */
 void dog_SetMode(uint8_t mode);
 
-// renders dog mode
-void dog_Render(void);
-
-// updates render
-void dog_Update(void);
-
-// draws dog walking to the center.
+/**
+ * @brief Loops and draws dog scene base on set mode
+ * 
+ */
 void draw_dog_scene(void);
 
 #endif

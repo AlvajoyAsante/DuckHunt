@@ -9,7 +9,8 @@
 /* Main Menu information */
 struct menu_t
 {
-	int opt;
+	// Menu Option
+	int option;
 };
 extern struct menu_t menu;
 

@@ -74,7 +74,7 @@ void update_scene(void)
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (menu.opt < 3)
+		if (menu.option < 3)
 		{
 			if (game.duck_hits[i])
 			{
@@ -188,7 +188,7 @@ void update_scene(void)
 	gfx_PrintString("R=");
 	gfx_PrintInt(player.round, 0);
 
-	if (menu.opt < 3)
+	if (menu.option < 3)
 	{
 		if (player.bullets == 0)
 		{
@@ -222,7 +222,7 @@ static int count_digits(int number)
 
 /**
  * This is used to draw the scene for the game.
- * It depends on the me variable (menu.opt).
+ * It depends on the me variable (menu.option).
  */
 void draw_scene(void)
 {
@@ -236,7 +236,7 @@ void draw_scene(void)
 	gfx_Rectangle(31, 7, 258, 225);
 
 	// Renders Sky
-	switch (menu.opt)
+	switch (menu.option)
 	{
 	case 1:
 		gfx_SetColor(4);
@@ -254,7 +254,7 @@ void draw_scene(void)
 		break;
 	}
 
-	if (menu.opt < 3)
+	if (menu.option < 3)
 	{ // Game A & Game B
 		// tree
 		temp = gfx_MallocSprite(bg_tree_width, bg_tree_height);
@@ -388,7 +388,7 @@ void draw_scene(void)
 /**
  * This is used to innit the game and setup and variables.
  */
-void init_duckhunt(uint8_t type)
+void init_duckhunt(void)
 {
 	/* Initialize the player position */
 	player.x = 320 / 2;
@@ -409,16 +409,13 @@ void init_duckhunt(uint8_t type)
 	DUCK_FALLEN_AMOUNT = 0;
 	GAME_TOTAL_HITS = 0;
 
-	switch (type)
+	switch (menu.option)
 	{
 	case 1:
 		init_enemies(1);
 		break;
 
 	case 2:
-		init_enemies(2);
-		break;
-
 	case 3:
 		init_enemies(2);
 		break;
@@ -533,5 +530,41 @@ void ui_rectangle(int x, int y, int w, int h)
 		}
 		else
 			gfx_VertLine(x + i, y, h);
+	}
+}
+
+/* routines below!! */
+/**
+ * @brief this function returns position of a point based on the given position
+ *
+ * @param pos postion
+ * @param Dpos desition position
+ * @param speed speed of obeject movement
+ * @return int the next step in-order to move on
+ */
+int Goto_Pos(int start, int end, uint8_t speed)
+{
+	/* Checks if the start position does not eqaul to the desitionation position */
+	if (start != end)
+	{
+		/* Checks if the postion is speed distance */
+		if (start - end <= speed && start - end >= -(speed))
+			return end;
+
+		/* Checks if the position is less than the destination position */
+		if (start < end)
+		{
+			start += speed;
+		}
+		else if (start > end) // Checks if the position is greater than position.
+		{
+			start -= speed;
+		}
+
+		return start;
+	}
+	else
+	{
+		return start;
 	}
 }

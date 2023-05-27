@@ -51,14 +51,14 @@ static int returnReward(int enemy_id)
 
 /**
  * @brief Renders shoot and checks if enemies have been shot
- * 
+ *
  */
 static void shoot(void)
 {
 	gfx_sprite_t *back_buffer;
 
 	/* Return can't shoot just yet! */
-	if (player.timer < 30)
+	if (player.timer < TIMER_RECOIL_MAX)
 		return;
 
 	/* Check if there is bullets to shoot */
@@ -130,7 +130,7 @@ bool player_keys(void)
 	kb_Scan();
 
 	/* Updates the player timer for shooting recoil */
-	if (player.timer < 50)
+	if (player.timer < TIMER_RECOIL_MAX)
 	{
 		player.timer++;
 	}
@@ -279,7 +279,7 @@ void draw_player(void)
 
 	/* Checks if the player has bullets */
 	if (player.bullets > 0)
-	{	
+	{
 		/* Render crosshair cursor */
 		temp = gfx_MallocSprite(crosshair_width, crosshair_height);
 		zx7_Decompress(temp, crosshair_compressed);
