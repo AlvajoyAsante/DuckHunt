@@ -26,7 +26,7 @@ static void menu_keys(sk_key_t key)
 		break;
 	}
 
-	delay(60);
+	delay(65);
 }
 
 bool init_menu(void)
@@ -65,7 +65,7 @@ bool init_menu(void)
 	gfx_PrintString("GAME  C     CLAY  SHOOTING");
 
 	// Show High Score
-	gfx_SetTextFGColor(9); // Green
+	gfx_SetTextFGColor(16); // Green
 	gfx_SetTextXY(85, 190);
 	gfx_PrintString("TOP  SCORE  =  ");
 	gfx_PrintInt(game.high_score, 5);
