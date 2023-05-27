@@ -48,7 +48,7 @@ void update_enemies(void);
 
 void animate_sprites(uint8_t pos);
 
-void init_enemies(uint8_t amount, uint8_t level);
+void init_enemies(uint8_t amount);
 
 int Goto_Pos(int pos, int Dpos, uint8_t speed);
 int Set_Goto_Y(void);

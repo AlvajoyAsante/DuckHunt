@@ -291,7 +291,7 @@ void animate_sprites(uint8_t pos)
 		break;
 
 	/* Shot duck */
-	case 7: 
+	case 7:
 
 		switch (enemies[pos].type)
 		{ // based on speeed
@@ -351,7 +351,6 @@ void animate_sprites(uint8_t pos)
 
 		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
 		break;
-
 
 	/* Ducks Flying away */
 	case 10:
@@ -570,7 +569,7 @@ void update_enemies(void)
 						draw_dog_scene();
 					}
 
-					init_enemies(menu.opt, player.level++);
+					init_enemies(menu.opt);
 				}
 				else
 				{
@@ -667,8 +666,10 @@ int Goto_Pos(int pos, int Dpos, uint8_t speed)
 	}
 }
 
-void init_enemies(uint8_t amount, uint8_t level)
+void init_enemies(uint8_t amount)
 {
+	uint8_t speed = 0;
+
 	/* Set amount of shot ducks to zero */
 	DUCK_FALLEN_AMOUNT = 0;
 
@@ -701,52 +702,30 @@ void init_enemies(uint8_t amount, uint8_t level)
 		enemies[i].angle = FACE_RIGHT; // flying angle
 
 		/* Set Duck speed based on input level */
-		switch (level)
+
+		/* Advanced amount */
+		if (player.round >= 1 && player.round <= 10)
 		{
-		case 1:
-		case 2:
-			enemies[i].speed = 1;
-			break;
-
-		case 3:
-		case 4:
-			enemies[i].speed = 2;
-			break;
-
-		case 5:
-		case 6:
-			enemies[i].speed = 3;
-			break;
-
-		case 7:
-		case 8:
-			enemies[i].speed = 4;
-			break;
-
-		case 9:
-		case 10:
-			enemies[i].speed = 5;
-			break;
-
-		case 11:
-		case 12:
-			enemies[i].speed = 6;
-			break;
-
-		case 13:
-		case 14:
-			enemies[i].speed = 7;
-			break;
-
-		case 15:
-		case 16:
-			enemies[i].speed = 8;
-			break;
-
-		default:
-			enemies[i].speed = randInt(8, 10);
-			break;
+			speed = randInt(1, 2);
 		}
+		else if (player.round >= 11 && player.round <= 12)
+		{
+			speed = randInt(2, 4);
+		}
+		else if (player.round >= 13 && player.round <= 14)
+		{
+			speed = randInt(3, 6);
+		}
+		else if (player.round >= 15 && player.round <= 19)
+		{
+			speed = randInt(3, 8);
+		}
+		else
+		{
+			speed = randInt(5, 8);
+		}
+
+		enemies[i].speed = speed;
 
 		/* Sets the duck type based on the set speed */
 		if (enemies[i].speed <= 3)
