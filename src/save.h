@@ -4,7 +4,7 @@
 #include <tice.h>
 #include <fileioc.h>
 
-#define SAVE_APPVAR_NAME DCKHNT
+#define SAVE_APPVAR_NAME DCKSAVE
 
 void save_game(void);
 
