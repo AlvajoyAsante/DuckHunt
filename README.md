@@ -6,13 +6,13 @@
 
 ## Features
 
-* Multiple game modes, including Classic, Time Attack, and Survival
+* Multiple game modes, including 1 Duck Shooting, 2 Duck Shooting, and Clay Shooting
 
-* Power-ups that can help you increase your score
+* Bonus Duck types with various point amounts
 
-* High-score leaderboard
+* Overall High-score
 
-* Compatible with all TI-84 Plus CE calculators
+* Compatible with TI-84 Plus CE calculators
 
 ## Installation
 
