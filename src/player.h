@@ -6,15 +6,16 @@
 #include <keypadc.h>
 #include <compression.h>
 
-/* Variables */
-struct player_t {
+/* Player information */
+struct player_t
+{
 	int x;
 	int y;
 
 	int score;
-	
+
 	int speed;
-	
+
 	int bullets;
 	int level;
 	int round;
@@ -25,9 +26,18 @@ struct player_t {
 };
 extern struct player_t player;
 
-
-/* player keys + shooting */
-void draw_player(void);
+/**
+ * @brief Checks for user keys
+ * 
+ * @return true user does not want to exit
+ * @return false user wants to exit
+ */
 bool player_keys(void);
+
+/**
+ * @brief Renders player cursor
+ * 
+ */
+void draw_player(void);
 
 #endif

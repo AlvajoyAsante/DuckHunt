@@ -1,12 +1,10 @@
 #ifndef MENU_H
 #define MENU_H
 
-#define COPYRIGHT_TEXT "1984  NINT ENDO  CO., LT D." 
+#define COPYRIGHT_TEXT "1984  NINT ENDO  CO., LT D."
 
 #include <tice.h>
 #include <keypadc.h>
-
-
 
 /* Main Menu information */
 struct menu_t
@@ -15,7 +13,12 @@ struct menu_t
 };
 extern struct menu_t menu;
 
-/* initialize the menu */
+/**
+ * @brief Render Menu and get user input
+ *
+ * @return true: user want to play
+ * @return false: user does not want to play
+ */
 bool init_menu(void);
 
 #endif

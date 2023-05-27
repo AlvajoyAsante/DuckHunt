@@ -7,8 +7,15 @@
 
 struct player_t player;
 
-static int returnReward(int pos)
+/**
+ * @brief Render reward if duck shot
+ *
+ * @param enemy_id index of enemy shot
+ * @return int reward of duck
+ */
+static int returnReward(int enemy_id)
 {
+	int level;
 	int rewards[][5] = {
 		{500, 800, 1000, 1000, 1000},		 // Duck A
 		{1000, 1600, 2000, 2000, 2000},		 // Duck B
@@ -16,22 +23,20 @@ static int returnReward(int pos)
 		{10000, 10000, 15000, 20000, 30000}, // Clay
 	};
 
-	int level;
-
 	/* Set level index */
-	if (player.level >= 1 && player.level <= 5)
+	if (player.round >= 1 && player.round <= 5)
 	{
 		level = 0;
 	}
-	else if (player.level >= 6 && player.level <= 10)
+	else if (player.round >= 6 && player.round <= 10)
 	{
 		level = 1;
 	}
-	else if (player.level >= 11 && player.level <= 15)
+	else if (player.round >= 11 && player.round <= 15)
 	{
 		level = 2;
 	}
-	else if (player.level >= 16 && player.level <= 20)
+	else if (player.round >= 16 && player.round <= 20)
 	{
 		level = 3;
 	}
@@ -41,11 +46,12 @@ static int returnReward(int pos)
 	}
 
 	/* Return the reward */
-	return rewards[(enemies[pos].type) - 1][level];
+	return rewards[(enemies[enemy_id].type) - 1][level];
 }
 
 /**
- * this function is used to kill enemies in this case ducks.
+ * @brief Renders shoot and checks if enemies have been shot
+ * 
  */
 static void shoot(void)
 {
@@ -65,6 +71,7 @@ static void shoot(void)
 		return;
 	}
 
+	/* Check if ducks overlaps cursor  */
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 
@@ -92,9 +99,9 @@ static void shoot(void)
 
 					/* Register Hit duck */
 					game.duck_hits[get_duck_hits_amount()] = 1;
-					
-					DUCK_FALLEN_AMOUNT++;	
-					GAME_TOTAL_HITS++; 				
+
+					DUCK_FALLEN_AMOUNT++;
+					GAME_TOTAL_HITS++;
 				}
 			}
 		}
@@ -116,9 +123,6 @@ static void shoot(void)
 	free(back_buffer);
 }
 
-/**
- * This function is used to control the player's cursor.
- */
 bool player_keys(void)
 {
 	kb_key_t key = kb_Data[7];
@@ -132,10 +136,10 @@ bool player_keys(void)
 	}
 
 	/* Check for exit */
-	if (kb_Data[6] == kb_Clear)
+	if (kb_Data[1] == kb_Del)
 		return 0;
 
-	/* if there is nothing in dog.mode then user can mover the cusor. */
+	/* if there is nothing in dog.mode then user can mover the cursor. */
 
 	if (kb_Data[1] == kb_2nd)
 	{
@@ -269,16 +273,14 @@ bool player_keys(void)
 	return 1;
 }
 
-/**
- * This function is used to draw the player's cursor.
- */
 void draw_player(void)
 {
-
 	gfx_sprite_t *temp;
 
+	/* Checks if the player has bullets */
 	if (player.bullets > 0)
-	{
+	{	
+		/* Render crosshair cursor */
 		temp = gfx_MallocSprite(crosshair_width, crosshair_height);
 		zx7_Decompress(temp, crosshair_compressed);
 

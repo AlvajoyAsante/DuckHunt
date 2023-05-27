@@ -8,42 +8,24 @@
 
 struct menu_t menu;
 
-/**
- * This function is used to control the menu cursor.
- */
-static void menu_keys(sk_key_t key)
-{
-	switch (key)
-	{
-	case kb_Up:
-		if (menu.opt > 1)
-			menu.opt--;
-		break;
-
-	case kb_Down:
-		if (menu.opt < 3)
-			menu.opt++;
-		break;
-	}
-
-	delay(65);
-}
-
 bool init_menu(void)
 {
-	sk_key_t key;
 	gfx_sprite_t *temp_sprite;
+	sk_key_t key;
 
-	gfx_FillScreen(2); // black
-	gfx_SetColor(0);
+
+	/* Setting up menu GUI */
+	gfx_FillScreen(2); // Black
 
 	menu.opt = 1;
 
+	/* Render Game Title */
 	temp_sprite = gfx_MallocSprite(Title_Menu_width, Title_Menu_height);
 	zx7_Decompress(temp_sprite, Title_Menu_compressed);
 	gfx_TransparentSprite(temp_sprite, 86, 32);
 	free(temp_sprite);
 
+	/* Render Game Modes */
 	gfx_SetTextFGColor(6); // Orange
 	gfx_SetTextXY(89, 133);
 	gfx_PrintString("GAME  A     1  DUCK");
@@ -52,54 +34,77 @@ bool init_menu(void)
 	gfx_SetTextXY(89, 164);
 	gfx_PrintString("GAME  C     CLAY  SHOOTING");
 
-	// Show High Score
+	/* Render Highscore */
 	gfx_SetTextFGColor(16); // Green
 	gfx_SetTextXY(85, 190);
 	gfx_PrintString("TOP  SCORE  =  ");
 	gfx_PrintInt(game.high_score, 5);
 
-	// Renders nintendo text
+	/* Render Nintendo Copyright */
 	temp_sprite = gfx_MallocSprite(cr_symbol_width, cr_symbol_height);
 	zx7_Decompress(temp_sprite, cr_symbol_compressed);
 	gfx_TransparentSprite(temp_sprite, (LCD_WIDTH - (gfx_GetStringWidth(COPYRIGHT_TEXT) + cr_symbol_width)) / 2, 213);
 	free(temp_sprite);
 
 	gfx_SetTextScale(1, 1);
-	gfx_SetTextFGColor(1);
-	gfx_SetTextXY((LCD_WIDTH - (gfx_GetStringWidth(COPYRIGHT_TEXT) - (cr_symbol_width + 4) )) / 2, 214);
+	gfx_SetTextFGColor(1); // White
+	gfx_SetTextXY((LCD_WIDTH - (gfx_GetStringWidth(COPYRIGHT_TEXT) - (cr_symbol_width + 4))) / 2, 214);
 	gfx_PrintString(COPYRIGHT_TEXT);
 
-	// Show version of program
+	/* Render Version Number */
 	gfx_SetTextScale(1, 1);
-	gfx_SetTextFGColor(1);
+	gfx_SetTextFGColor(1); // White
 	gfx_SetTextXY((LCD_WIDTH - gfx_GetStringWidth(DUCKHUNT_VERSION)) / 2, 228);
 	gfx_PrintString(DUCKHUNT_VERSION);
 
+	/* Decompress Cursor */
 	temp_sprite = gfx_MallocSprite(menu_arrow_width, menu_arrow_height);
 	zx7_Decompress(temp_sprite, menu_arrow_compressed);
 
-	do
+	/* Loop to manage user input */
+	while (1)
 	{
+		/* Clear cursor position */
 		gfx_SetColor(2); // black
 		gfx_FillRectangle(60, 130, 14, 43);
 
-		// keys
+		/* Scan and manage keys */
 		kb_Scan();
-
-		/* Check arrows keys */
 		key = kb_Data[7];
-		menu_keys(key);
 
-		/* Check if 2nd / Enter was clicked */
+		switch (key)
+		{
+		case kb_Up:
+			if (menu.opt > 1)
+			{
+				menu.opt--;
+			}
+
+			delay(65);
+			break;
+
+		case kb_Down:
+			if (menu.opt < 3)
+			{
+				menu.opt++;
+			}
+
+			delay(65);
+			break;
+		}
+
+		/* Check if [2nd], [Enter] was clicked */
 		if (kb_Data[1] == kb_2nd || kb_Data[6] == kb_Enter)
 			break;
 
 		/* Check if user wants to exit */
-		if (kb_Data[6] == kb_Clear)
+		if (kb_Data[1] == kb_Del)
 		{
 			free(temp_sprite);
 			delay(60);
-			return 0;
+
+			/* Return false if user does not want to play */
+			return false;
 		}
 
 		/* Render arrow sprite based on menu position */
@@ -118,13 +123,19 @@ bool init_menu(void)
 			break;
 		}
 
+		// ################
+
 		gfx_Blit(1);
-	} while (1);
+
+		// ###############
+	}
 
 	/* Free the temp sprite used for rendering */
 	free(temp_sprite);
 
 	/* Start the game based on menu option */
 	init_duckhunt(menu.opt);
-	return 1;
+
+	/* Return true if use want to play*/
+	return true;
 }

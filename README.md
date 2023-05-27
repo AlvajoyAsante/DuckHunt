@@ -10,7 +10,7 @@
 
 * Bonus Duck types with various point amounts
 
-* Overall High-score
+* Overall high-score
 
 * Compatible with TI-84 Plus CE calculators
 
