@@ -414,6 +414,47 @@ void animate_sprites(uint8_t pos)
 	free(sprite_buff);
 }
 
+static int get_inactive_enemies(void)
+{
+	int tick = 0;
+	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		if (!enemies[i].active)
+		{
+			tick++;
+		}
+	}
+	return tick;
+}
+
+static int get_inactive_shot_enemies(void)
+{
+	int tick = 0;
+	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		if (!enemies[i].active && enemies[i].shot == true)
+		{
+			tick++;
+		}
+	}
+	return tick;
+}
+
+static int get_inactive_flyaway_enemies(void)
+{
+	int tick = 0;
+
+	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		if (!enemies[i].active && enemies[i].fly_away == true)
+		{
+			tick++;
+		}
+	}
+
+	return tick;
+}
+
 void update_enemies(void)
 {
 	for (int i = 0; i < DUCK_AMOUNT; i++)
@@ -431,13 +472,14 @@ void update_enemies(void)
 					enemies[i].gotoX = enemies[i].x;
 					enemies[i].gotoY = -20;
 					enemies[i].speed = 4;
-					enemies[i].fly_away = 1;
+					enemies[i].fly_away = true;
 
 					/* Set the costume to 10 */
 					if (enemies[i].cnum < 10)
 					{
 						enemies[i].cnum = 10;
-						game.duck_hits[get_duck_hits_amount()] = 0;
+						// game.duck_hits[get_duck_hits_amount()] = 0;
+						GAME_TOTAL_HITS++;
 					}
 				}
 			}
@@ -529,68 +571,60 @@ void update_enemies(void)
 				enemies[i].animate = 0; // Reset the timer
 			}
 		}
-		else
+	}
+
+	/* Checks if the all ducks have fallen */
+	if (get_inactive_enemies() == DUCK_AMOUNT)
+	{
+
+		if (menu.opt < 3)
 		{
-			/* Checks if the all ducks have fallen */
-			if ((DUCK_FALLEN_AMOUNT % DUCK_AMOUNT) == 0)
+			/* Check if player has ran through 10 ducks */
+			if (GAME_TOTAL_HITS > 9)
 			{
-
-				if (menu.opt < 3)
+				if (get_duck_hits_amount() >= GAME_ADVANCE_THRESHOLD)
 				{
-					if (GAME_TOTAL_HITS < 9)
-					{
-						GAME_TOTAL_HITS += menu.opt;
-					}
-					else
-					{
-						if (get_duck_hits_amount() >= GAME_ADVANCE_THRESHOLD)
-						{
-							// Manage the game
-							player.round++;
+					/* Reset bullets and increase rounds */
+					player.bullets = 3;
+					player.round++;
 
-							GAME_TOTAL_HITS = 0;
+					/* Reset hit ducks on HUD */
+					reset_duck_hits();
 
-							/* Reset The data */
-							player.bullets = 3; // Reset Bullets
+					/* Draw dog scene again */
+					draw_scene();
 
-							reset_duck_hits();
-
-							draw_scene();
-
-							init_enemies(menu.opt);
-							return;
-						}
-						else
-						{
-							// Game Over
-							gfx_End();
-							exit(1);
-						}
-					}
-
-					if (DUCK_FALLEN_AMOUNT == DUCK_AMOUNT)
-					{
-						dog_SetMode(DOG_PEEK_UP); // Pop up
-						draw_dog_scene();
-					}
-
+					/* Init new ducks to fly */
+					GAME_TOTAL_HITS = 0;
 					init_enemies(menu.opt);
+					return;
 				}
 				else
 				{
+					/* Temporary Game Over Screen */
+					gfx_End();
+					exit(1);
 				}
-
-				player.bullets = 3; // Reset Bullets
-
-				DUCK_FALLEN_AMOUNT = 0; // Reset Fallen Amount
-
-				return;
 			}
-			else
+
+			if (get_inactive_shot_enemies() == DUCK_AMOUNT)
 			{
-				continue;
+				dog_SetMode(DOG_PEEK_UP); // Pop up
+				draw_dog_scene();
 			}
+
+			init_enemies(menu.opt);
 		}
+		else
+		{
+			// GAME C
+		}
+
+		player.bullets = 3; // Reset Bullets
+
+		DUCK_FALLEN_AMOUNT = 0; // Reset Fallen Amount
+
+		return;
 	}
 }
 

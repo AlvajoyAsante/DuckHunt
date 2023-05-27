@@ -44,6 +44,7 @@ extern struct enemies_t enemies[5];
 void SetCostume(uint8_t pos, uint8_t num);
 
 void draw_enemies(void);
+
 void update_enemies(void);
 
 void animate_sprites(uint8_t pos);
@@ -51,7 +52,9 @@ void animate_sprites(uint8_t pos);
 void init_enemies(uint8_t amount);
 
 int Goto_Pos(int pos, int Dpos, uint8_t speed);
+
 int Set_Goto_Y(void);
+
 int Set_Goto_X(void);
 
 #endif

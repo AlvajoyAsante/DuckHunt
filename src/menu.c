@@ -44,18 +44,6 @@ bool init_menu(void)
 	gfx_TransparentSprite(temp_sprite, 86, 32);
 	free(temp_sprite);
 
-	/* // Render the game modes text
-	temp_sprite = gfx_MallocSprite(game_types_width, game_types_height);
-	zx7_Decompress(temp_sprite, game_types_compressed);
-	gfx_TransparentSprite(temp_sprite, 89, 132);
-	free(temp_sprite); */
-
-	// Render the game modes
-	/* temp_sprite = gfx_MallocSprite(game_type_text_width, game_type_text_height);
-	zx7_Decompress(temp_sprite, game_type_text_compressed);
-	gfx_TransparentSprite(temp_sprite, 168, 132);
-	free(temp_sprite); */
-
 	gfx_SetTextFGColor(6); // Orange
 	gfx_SetTextXY(89, 133);
 	gfx_PrintString("GAME  A     1  DUCK");

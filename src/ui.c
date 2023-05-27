@@ -86,16 +86,15 @@ void update_scene(void)
 
 		gfx_TransparentSprite(temp, 127 + (i * (panel_icon_1_width + 1)), 213);
 
-
 		/* Blinking */
-		if ((game.start == false && GAME_TOTAL_HITS != DOG_RUN_TO_CENTER) || (game.start == true && GAME_TOTAL_HITS != DOG_HIDDEN))
+		if (dog.mode != DOG_RUN_TO_CENTER && game.start == true)
 		{
 			if (get_duck_hits_amount() == i)
 			{
 				if (randInt(0, 1))
 				{
 					gfx_SetColor(2);
-					gfx_FillRectangle(127 + (i * (7 + 1)), 213, 7, 7);
+					gfx_FillRectangle(127 + (i * (8)), 213, 7, 7);
 				}
 			}
 		}
@@ -200,6 +199,8 @@ void draw_scene(void)
 {
 	gfx_sprite_t *back_buffer, *temp;
 
+	game.start = false;
+
 	gfx_FillScreen(2); // BLACK
 
 	gfx_SetColor(1); // WHITE
@@ -284,8 +285,6 @@ void draw_scene(void)
 		gfx_SetTextXY((LCD_WIDTH - gfx_GetStringWidth("ROUND")) / 2, 110);
 		gfx_PrintString("ROUND");
 
-		
-
 		gfx_SetTextXY((LCD_WIDTH - (8 * count_digits(player.round))) / 2, 123);
 		gfx_PrintInt(player.round, 0);
 
@@ -293,6 +292,7 @@ void draw_scene(void)
 
 		delay(1000);
 
+		/* Print round number back buffer */
 		gfx_Sprite(back_buff, (LCD_WIDTH - fly_away_width) / 2, 103);
 		free(back_buff);
 
@@ -351,6 +351,8 @@ void draw_scene(void)
 		update_scene();
 	}
 
+	game.start = true;
+
 	gfx_Blit(1);
 }
 
@@ -368,9 +370,16 @@ void init_duckhunt(uint8_t type)
 	player.round = 1;
 	player.bullets = 3;
 
+	/* HUD setup */
+	reset_duck_hits();
+
+	/* Dog setup */
 	dog_SetMode(DOG_HIDDEN);
 
-	/* Set the enemies types */
+	/* Setup the enemies */
+	DUCK_FALLEN_AMOUNT = 0;
+	GAME_TOTAL_HITS = 0;
+
 	switch (type)
 	{
 	case 1:
@@ -431,6 +440,22 @@ void get_buffer_layer(void)
 }
 
 /**
+ * @brief Free the sprite from buffers
+ *
+ */
+static void free_buffer_layer(void)
+{
+	/* Free player back buffer */
+	free(player.back_buffer);
+
+	/* Free duck back buffer */
+	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		free(enemies[i].back_buffer);
+	}
+}
+
+/**
  * This draws any sprite buffered from "get_buffer_layer"
  */
 void draw_buffer_layer(void)
@@ -440,6 +465,8 @@ void draw_buffer_layer(void)
 
 	/* Render duck back buffer */
 	draw_duck_buffer_layer();
+
+	free_buffer_layer();
 }
 
 void draw_duck_buffer_layer(void)
@@ -447,22 +474,6 @@ void draw_duck_buffer_layer(void)
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		gfx_TransparentSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
-	}
-}
-
-/**
- * @brief Free the sprite from buffers
- *
- */
-void free_buffer_layer(void)
-{
-	/* Free player back buffer */
-	free(player.back_buffer);
-
-	/* Free duck back buffer */
-	for (int i = 0; i < DUCK_AMOUNT; i++)
-	{
-		free(enemies[i].back_buffer);
 	}
 }
 

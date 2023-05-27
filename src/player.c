@@ -93,7 +93,8 @@ static void shoot(void)
 					/* Register Hit duck */
 					game.duck_hits[get_duck_hits_amount()] = 1;
 					
-					DUCK_FALLEN_AMOUNT++;					
+					DUCK_FALLEN_AMOUNT++;	
+					GAME_TOTAL_HITS++; 				
 				}
 			}
 		}

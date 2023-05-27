@@ -29,18 +29,21 @@ struct game_t
 extern struct game_t game;
 
 void update_scene(void);
+
 void draw_scene(void);
+
 void init_duckhunt(uint8_t type);
 
 void reset_duck_hits(void);
+
 int get_duck_hits_amount(void);
 
 void get_buffer_layer(void);
+
 void draw_buffer_layer(void);
+
 void draw_duck_buffer_layer(void);
-void free_buffer_layer(void);
 
 void ui_rectangle(int x, int y, int w, int h);
-
 
 #endif
