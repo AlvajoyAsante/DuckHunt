@@ -43,16 +43,16 @@ Note: If your OS is 5.5 or higher, use the arTIfiCE exploit tool to run the prog
 
 ## Concepts Images
 
-![](./docs/CONCEPTS/menu.png) ![](./docs/CONCEPTS/game_a.png)
+![](./images/CONCEPTS/menu.png) ![](./images/CONCEPTS/game_a.png)
 
-![](./docs/CONCEPTS/game_b.png) ![](./docs/CONCEPTS/game_c.png)
+![](./images/CONCEPTS/game_b.png) ![](./images/CONCEPTS/game_c.png)
 
 ## Development
 Current State:
 
 |GAME A|GAME B|GAME C|
 |--|--|--|
-|![](./docs/SCREENSHOTS/GAME%20A/SHOWCASE_1.png)|![](./docs/SCREENSHOTS/GAME%20B/SHOWCASE_1.png)|![](./docs/SCREENSHOTS/GAME%20C/SHOWCASE_1.png)|
+|![](./images/SCREENSHOTS/GAME%20A/SHOWCASE_1.png)|![](./images/SCREENSHOTS/GAME%20B/SHOWCASE_1.png)|![](./images/SCREENSHOTS/GAME%20C/SHOWCASE_1.png)|
 
 
 > *Keep up to date on the recent development by checking out the [New Discord Server](https://discord.gg/xyUZgnD4UJ "New Discord Server") or on [Cemetech Forums](https://www.cemetech.net/forum/viewtopic.php?t=15070 "Cemetech Forums"). You can also view the [Trello Board](https://trello.com/b/NkkezsJu/duckhunt-development-c) For more information about the development.*
