@@ -8,7 +8,8 @@
  */
 static void init_settings(void)
 {
-    game.high_score = game.start = game.amount_fallen = game.fallen_id = game.enemies_amount = game.advance_amount = game.total_hits = 0;
+    game.high_score = 12000; 
+    game.start = game.amount_fallen = game.fallen_id = game.enemies_amount = game.advance_amount = game.total_hits = 0;
     reset_duck_hits();
 }
 
@@ -41,7 +42,7 @@ bool load_game(void)
     {
         if (ti_Read(&game, sizeof(struct game_t), 1, slot))
         {
-            /* Reset other data beside highscore */
+            /* Reset other data beside high-score */
             game.start = game.amount_fallen = game.fallen_id = game.enemies_amount = game.advance_amount = game.total_hits = 0;
         }
 

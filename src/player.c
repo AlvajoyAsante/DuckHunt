@@ -87,12 +87,21 @@ static void shoot(void)
 
 					/* Prime the duck for shooting */
 					enemies[i].angle = 0;
-					enemies[i].gotoY = 140;
-					enemies[i].gotoX = enemies[i].x;
-					enemies[i].speed = 4;
 					enemies[i].shot = true;
-					enemies[i].cnum = 7; // costume shot
-					enemies[i].animate = 0;
+
+					if (menu.option < 3)
+					{
+						// Game A and B
+						enemies[i].gotoY = 140;
+						enemies[i].gotoX = enemies[i].x;
+						enemies[i].speed = 4;
+						enemies[i].cnum = 7; // costume shot
+						enemies[i].animate = 0;
+					}
+					else
+					{
+						// Game C
+					}
 
 					/* Determine Score */
 					player.score += returnReward(i);

@@ -1,4 +1,5 @@
 #include "ui.h"
+#include "utils.h"
 #include "ducks.h"
 #include "menu.h"
 #include "dog.h"
@@ -56,15 +57,33 @@ void update_scene(void)
 {
 	gfx_sprite_t *temp;
 
-	gfx_SetColor(2); // Black
-	gfx_FillRectangle(57, 212, 20, 7);
-
 	// Draw Bullets
+	gfx_SetColor(2); // Black
+	if (menu.option < 3)
+	{
+		gfx_FillRectangle(57, 212, 20, 7);
+	}
+	else
+	{
+		gfx_FillRectangle(57, 204, 20, 7);
+	}
+
 	for (int i = 0; i < player.bullets; i++)
 	{
 		temp = gfx_MallocSprite(bullet_width, bullet_height);
 		zx7_Decompress(temp, bullet_compressed);
-		gfx_TransparentSprite(temp, 57 + (i * (4 + 4)), 212);
+
+		if (menu.option < 3)
+		{
+			// Game A and B
+			gfx_TransparentSprite(temp, 57 + (i * (4 + 4)), 212);
+		}
+		else
+		{
+			// Game C
+			gfx_TransparentSprite(temp, 57 + (i * (4 + 4)), 204);
+		}
+
 		free(temp);
 	}
 
@@ -76,6 +95,7 @@ void update_scene(void)
 	{
 		if (menu.option < 3)
 		{
+			// Game A and B
 			if (game.duck_hits[i])
 			{
 				zx7_Decompress(temp, panel_icon_2_compressed);
@@ -102,18 +122,19 @@ void update_scene(void)
 		}
 		else
 		{
+
 			if (game.duck_hits[i])
 			{
-				// zx7_Decompress(temp, panel_icon_2_compressed);
+				zx7_Decompress(temp, panel_icon_4_compressed);
 				gfx_SetColor(16);
 			}
 			else
 			{
-				// zx7_Decompress(temp, panel_icon_1_compressed);
+				zx7_Decompress(temp, panel_icon_5_compressed);
 				gfx_SetColor(1);
 			}
 
-			gfx_FillRectangle(127 + (i * (panel_icon_1_width + 1)), 213, 7, 7);
+			gfx_TransparentSprite(temp, 127 + (i * (panel_icon_1_width + 1)), 205);
 
 			if (game.start == true)
 			{
@@ -122,7 +143,7 @@ void update_scene(void)
 					if (randInt(0, 1))
 					{
 						gfx_SetColor(2);
-						gfx_FillRectangle(127 + (i * (8)), 213, 7, 7);
+						gfx_FillRectangle(127 + (i * (8)), 205, 7, 7);
 					}
 				}
 			}
@@ -153,15 +174,19 @@ void update_scene(void)
 		GAME_ADVANCE_THRESHOLD = 10;
 	}
 
-	// gfx_SetColor(6);
-
 	temp = gfx_MallocSprite(panel_icon_3_width, panel_icon_3_height);
 	zx7_Decompress(temp, panel_icon_3_compressed);
 
 	for (int i = 0; i < GAME_ADVANCE_THRESHOLD; i++)
 	{
-		gfx_TransparentSprite(temp, 127 + (i * (panel_icon_3_width + 1)), 221);
-		// gfx_FillRectangle(127 + (i * (7 + 1)), 221, 7, 7);
+		if (menu.option < 3)
+		{
+			gfx_TransparentSprite(temp, 127 + (i * (panel_icon_3_width + 1)), 221);
+		}
+		else
+		{
+			gfx_TransparentSprite(temp, 127 + (i * (panel_icon_3_width + 1)), 213);
+		}
 	}
 
 	free(temp);
@@ -169,25 +194,32 @@ void update_scene(void)
 	// Draw Score
 
 	/* Fill the area up */
-	gfx_SetColor(2); // Black
-	gfx_FillRectangle(223, 211, 47, 8);
+	gfx_SetColor(2);	   // Black
+	gfx_SetTextFGColor(1); // White
 
-	/* Print the Score */
-	gfx_SetTextFGColor(1);
-	gfx_SetTextXY(223, 211);
-	gfx_PrintInt(player.score, 6);
+	if (menu.option < 3)
+	{
+		gfx_FillRectangle(223, 211, 47, 8);
+
+		gfx_SetTextXY(223, 211);
+		gfx_PrintInt(player.score, 6);
+	}
+	else
+	{
+		gfx_FillRectangle(223, 203, 47, 8);
+
+		gfx_SetTextXY(223, 203);
+		gfx_PrintInt(player.score, 6);
+	}
 
 	// Draw Round
-
-	/* gfx_SetColor(2); // Black
-	gfx_FillRectangle(253, 11, 32, 8); */
-
-	gfx_SetTextFGColor(16);
-	gfx_SetTextBGColor(2);
+	gfx_SetTextFGColor(16); // Green
+	gfx_SetTextBGColor(2);	// Black
 	gfx_SetTextXY(253, 11);
 	gfx_PrintString("R=");
 	gfx_PrintInt(player.round, 0);
 
+	/* Render Fly away Scene for game A and B */
 	if (menu.option < 3)
 	{
 		if (player.bullets == 0)
@@ -198,9 +230,6 @@ void update_scene(void)
 				flyaway_scene();
 			}
 		}
-	}
-	else
-	{
 	}
 
 	if (kb_Data[1] == kb_Mode)
@@ -500,71 +529,5 @@ void draw_duck_buffer_layer(void)
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		gfx_TransparentSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
-	}
-}
-
-void ui_rectangle(int x, int y, int w, int h)
-{
-	gfx_SetColor(16);
-	for (int i = 0; i < w; i++)
-	{
-		if (i == 0 || i == w - 1)
-		{
-			gfx_VertLine(x + i, y + 1, h - 2);
-		}
-		else
-			gfx_VertLine(x + i, y, h);
-	}
-
-	gfx_SetColor(2);
-
-	x++;
-	y++;
-	w -= 2;
-	h -= 2;
-	for (int i = 0; i < w; i++)
-	{
-		if (i == 0 || i == w - 1)
-		{
-			gfx_VertLine(x + i, y + 1, h - 2);
-		}
-		else
-			gfx_VertLine(x + i, y, h);
-	}
-}
-
-/* routines below!! */
-/**
- * @brief this function returns position of a point based on the given position
- *
- * @param pos postion
- * @param Dpos desition position
- * @param speed speed of obeject movement
- * @return int the next step in-order to move on
- */
-int Goto_Pos(int start, int end, uint8_t speed)
-{
-	/* Checks if the start position does not eqaul to the desitionation position */
-	if (start != end)
-	{
-		/* Checks if the postion is speed distance */
-		if (start - end <= speed && start - end >= -(speed))
-			return end;
-
-		/* Checks if the position is less than the destination position */
-		if (start < end)
-		{
-			start += speed;
-		}
-		else if (start > end) // Checks if the position is greater than position.
-		{
-			start -= speed;
-		}
-
-		return start;
-	}
-	else
-	{
-		return start;
 	}
 }

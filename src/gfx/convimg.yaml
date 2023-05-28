@@ -37,6 +37,7 @@ converts:
     palette: palette
     transparent-color-index: 0
     images:
+      # Duck a
       - DUCKS/Duck_A_1.png
       - DUCKS/Duck_A_2.png
       - DUCKS/Duck_A_3.png
@@ -75,6 +76,10 @@ converts:
       - DUCKS/Duckc_Flyaway_2.png
       - DUCKS/Duckc_Flyaway_3.png
       - DUCKS/Duckc_Shot.png
+      # Clay
+      - DUCKS/Clay_1.png
+      - DUCKS/Clay_2.png
+      - DUCKS/Clay_3.png
 
   - name: game
     palette: palette
@@ -87,6 +92,8 @@ converts:
       - GAME/panel_icon_1.png
       - GAME/panel_icon_2.png
       - GAME/panel_icon_3.png
+      - GAME/panel_icon_4.png
+      - GAME/panel_icon_5.png
       - GAME/bullet.png
       - GAME/bullet_board.png
       - GAME/c_ground.png

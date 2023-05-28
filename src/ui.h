@@ -4,6 +4,11 @@
 #define DUCKHUNT_VERSION "PRE-ALPHA"
 #define TIMER_ANIMATE_MAX 4
 
+#define GAME_CANVAS_X_MIN 32
+#define GAME_CANVAS_X_MAX 287
+#define GAME_CANVAS_Y_MIN 8
+#define GAME_CANVAS_Y_MAX 230
+
 #define DUCK_FALLEN_AMOUNT game.amount_fallen
 #define DUCK_FALLEN_ID game.fallen_id
 #define DUCK_AMOUNT game.enemies_amount
@@ -24,7 +29,7 @@ struct game_t
     // Amount of enemies fallen
     int amount_fallen;
 
-    // Last fallen enemy array index 
+    // Last fallen enemy array index
     int fallen_id;
 
     // Amount of enemies in game
@@ -38,7 +43,7 @@ struct game_t
 
     // Enemy hit tracker use HUD
     bool duck_hits[10];
-    
+
     // total hit attempts
     int total_hits;
 };
@@ -95,27 +100,5 @@ void draw_buffer_layer(void);
  *
  */
 void draw_duck_buffer_layer(void);
-
-/* routines */
-/**
- * @brief Renders a traditional rectangle from the game
- *
- * @param x X-Position
- * @param y Y-Position
- * @param w Width
- * @param h Height
- */
-void ui_rectangle(int x, int y, int w, int h);
-
-/**
- * @brief This function returns the next position of a point based on the given start, end, and speed.
- *        Note: This is used in recursion!
- *
- * @param start Starting position
- * @param end Ending Position
- * @param speed Speed of object
- * @return int next position
- */
-int Goto_Pos(int start, int end, uint8_t speed);
 
 #endif

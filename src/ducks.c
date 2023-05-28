@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include "ducks.h"
 #include "ui.h"
+#include "utils.h"
 #include "dog.h"
 #include "menu.h"
 #include "player.h"
@@ -19,26 +20,44 @@ struct enemies_t enemies[5];
 
 /* Duck Animations */
 static int Set_Goto_Y(void)
-{ // for game A and B
-	if (randInt(0, 1))
+{
+	if (menu.option < 3)
 	{
-		return 8;
+		if (randInt(0, 1))
+		{
+			return 8;
+		}
+		else
+		{
+			return 167 - 35;
+		}
 	}
 	else
 	{
-		return 167 - 35;
+		// Game C
+		return randInt(GAME_CANVAS_Y_MIN + 30, (GAME_CANVAS_Y_MIN + 30) + 10);
 	}
 }
 
 static int Set_Goto_X(void)
 {
-	if (randInt(0, 1))
+	if (menu.option < 3)
 	{
-		return 33;
+		// Game A
+
+		if (randInt(0, 1))
+		{
+			return 33;
+		}
+		else
+		{
+			return 254;
+		}
 	}
 	else
 	{
-		return 254;
+		// Game C
+		return randInt(GAME_CANVAS_X_MIN, GAME_CANVAS_X_MAX);
 	}
 }
 
@@ -102,6 +121,18 @@ static void enemies_manage_cnum(uint8_t pos)
 		break;
 	case 12: // If Costume is 12 change it at the right time to 10
 		enemies[pos].cnum = 10;
+		break;
+
+	case 13:
+		enemies[pos].cnum = 14;
+		break;
+
+	case 14:
+		enemies[pos].cnum = 15;
+		break;
+
+	case 15:
+		// This case is not need but here for visuals
 		break;
 	}
 
@@ -433,6 +464,18 @@ static void enemies_render_sprites(uint8_t pos)
 
 		gfx_TransparentSprite(temp_buffer, enemies[pos].x, enemies[pos].y);
 		break;
+
+	case 13:
+		gfx_TransparentSprite(Clay_1, enemies[pos].x, enemies[pos].y);
+		break;
+
+	case 14:
+		gfx_TransparentSprite(Clay_2, enemies[pos].x, enemies[pos].y);
+		break;
+
+	case 15:
+		gfx_TransparentSprite(Clay_3, enemies[pos].x, enemies[pos].y);
+		break;
 	}
 
 	free(sprite_buff);
@@ -470,104 +513,111 @@ void update_enemies(void)
 	{
 		if (enemies[i].active)
 		{
-			// Fly away init
-			/* If there zero bullets left */
-			if (player.bullets < 1)
+			if (menu.option)
 			{
-				/* Check if the duck is not shot  */
-				if (!enemies[i].shot)
+				// Fly away init
+				/* If there zero bullets left */
+				if (player.bullets < 1)
 				{
-					enemies[i].angle = DUCK_FALLING;
-					enemies[i].gotoX = enemies[i].x;
-					enemies[i].gotoY = -20;
-					enemies[i].speed = 4;
-					enemies[i].fly_away = true;
-
-					/* Set the costume to 10 */
-					if (enemies[i].cnum < 10)
+					/* Check if the duck is not shot  */
+					if (!enemies[i].shot)
 					{
-						enemies[i].cnum = 10;
-						// game.duck_hits[get_duck_hits_amount()] = 0;
-						GAME_TOTAL_HITS++;
+						enemies[i].angle = DUCK_FALLING;
+						enemies[i].gotoX = enemies[i].x;
+						enemies[i].gotoY = -20;
+						enemies[i].speed = 4;
+						enemies[i].fly_away = true;
+
+						/* Set the costume to 10 */
+						if (enemies[i].cnum < 10)
+						{
+							enemies[i].cnum = 10;
+							// game.duck_hits[get_duck_hits_amount()] = 0;
+							GAME_TOTAL_HITS++;
+						}
 					}
 				}
-			}
 
-			/* Checks if the X position of duck is at its dest point */
-			if (enemies[i].x != enemies[i].gotoX)
-			{
-				if (enemies[i].x < enemies[i].gotoX)
+				/* Checks if the X position of duck is at its dest point */
+				if (enemies[i].x != enemies[i].gotoX)
 				{
-					enemies[i].x += enemies[i].speed;
-					if (enemies[i].angle != DUCK_FALLING)
-						enemies[i].angle = FACE_RIGHT;
-				}
-				else if (enemies[i].x > enemies[i].gotoX)
-				{
-					enemies[i].x -= enemies[i].speed;
-					if (enemies[i].angle != DUCK_FALLING)
-						enemies[i].angle = FACE_LEFT;
-				}
-
-				/* Check if the positin is in the radius of dest point */
-				if (enemies[i].x - enemies[i].gotoX <= enemies[i].speed && enemies[i].x - enemies[i].gotoX >= -(enemies[i].speed))
-				{
-					enemies[i].x = enemies[i].gotoX;
-				}
-			}
-			else
-			{
-				/* if at it's destination then set a new got X */
-				if (enemies[i].angle != DUCK_FALLING)
-				{
-					enemies[i].gotoX = Set_Goto_X();
-				}
-			}
-
-			/* Checks if the Y position of duck is at its dest point */
-			if (enemies[i].y != enemies[i].gotoY)
-			{
-				/* Check is the y position is in radius of the destination postion */
-				if (enemies[i].y - enemies[i].gotoY <= enemies[i].speed && enemies[i].y - enemies[i].gotoY >= -(enemies[i].speed))
-					enemies[i].y = enemies[i].gotoY;
-
-				/* if the duck is custom number is not  on falling duck sprite */
-				if (enemies[i].cnum != 7)
-				{
-					/* Check if the Y position is below the dest Y position  */
-					if (enemies[i].y < enemies[i].gotoY)
+					if (enemies[i].x < enemies[i].gotoX)
 					{
-						/* Update the Y position based on speed */
-						enemies[i].y += enemies[i].speed;
-
-						/* Update angle if not equal to 0 or 2 */
-						if (enemies[i].angle != DUCK_FALLING && enemies[i].angle != FACE_LEFT)
-							enemies[i].angle = 3;
+						enemies[i].x += enemies[i].speed;
+						if (enemies[i].angle != DUCK_FALLING)
+							enemies[i].angle = FACE_RIGHT;
 					}
-					else if (enemies[i].y > enemies[i].gotoY) // Check if the Y position is above the dest position
+					else if (enemies[i].x > enemies[i].gotoX)
 					{
-						/* Update the Y position based on speed */
-						enemies[i].y -= enemies[i].speed;
-
-						/* Update angle if not equal to 0 or 1 */
-						if (enemies[i].angle != DUCK_FALLING && enemies[i].angle != FACE_RIGHT)
-							enemies[i].angle = 4;
+						enemies[i].x -= enemies[i].speed;
+						if (enemies[i].angle != DUCK_FALLING)
+							enemies[i].angle = FACE_LEFT;
 					}
-				}
-			}
-			else
-			{
-				/* Check if the bird is falling */
-				if (enemies[i].angle == DUCK_FALLING)
-				{
-					DUCK_FALLEN_ID = i;
-					enemies[i].active = false;
-					return;
+
+					/* Check if the positin is in the radius of dest point */
+					if (enemies[i].x - enemies[i].gotoX <= enemies[i].speed && enemies[i].x - enemies[i].gotoX >= -(enemies[i].speed))
+					{
+						enemies[i].x = enemies[i].gotoX;
+					}
 				}
 				else
 				{
-					enemies[i].gotoY = Set_Goto_Y();
+					/* if at it's destination then set a new got X */
+					if (enemies[i].angle != DUCK_FALLING)
+					{
+						enemies[i].gotoX = Set_Goto_X();
+					}
 				}
+
+				/* Checks if the Y position of duck is at its dest point */
+				if (enemies[i].y != enemies[i].gotoY)
+				{
+					/* Check is the y position is in radius of the destination postion */
+					if (enemies[i].y - enemies[i].gotoY <= enemies[i].speed && enemies[i].y - enemies[i].gotoY >= -(enemies[i].speed))
+						enemies[i].y = enemies[i].gotoY;
+
+					/* if the duck is custom number is not  on falling duck sprite */
+					if (enemies[i].cnum != 7)
+					{
+						/* Check if the Y position is below the dest Y position  */
+						if (enemies[i].y < enemies[i].gotoY)
+						{
+							/* Update the Y position based on speed */
+							enemies[i].y += enemies[i].speed;
+
+							/* Update angle if not equal to 0 or 2 */
+							if (enemies[i].angle != DUCK_FALLING && enemies[i].angle != FACE_LEFT)
+								enemies[i].angle = 3;
+						}
+						else if (enemies[i].y > enemies[i].gotoY) // Check if the Y position is above the dest position
+						{
+							/* Update the Y position based on speed */
+							enemies[i].y -= enemies[i].speed;
+
+							/* Update angle if not equal to 0 or 1 */
+							if (enemies[i].angle != DUCK_FALLING && enemies[i].angle != FACE_RIGHT)
+								enemies[i].angle = 4;
+						}
+					}
+				}
+				else
+				{
+					/* Check if the bird is falling or flying away  */
+					if (enemies[i].angle == DUCK_FALLING)
+					{
+						DUCK_FALLEN_ID = i;
+						enemies[i].active = false;
+						return;
+					}
+					else
+					{
+						enemies[i].gotoY = Set_Goto_Y();
+					}
+				}
+			}
+			else
+			{
+				// Game C Updating
 			}
 
 			/* Animation timer */
@@ -649,30 +699,38 @@ void draw_enemies(void)
 			/* Animate the duck sprites */
 			enemies_render_sprites(i);
 
-			/* Render the grass if the duck is a certain */
-			if (enemies[i].y >= 134 || enemies[i].y <= 8)
+			if (menu.option < 3)
 			{
-				/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
-				switch (menu.option)
+				// Game A and B
+				/* Render the grass if the duck is a certain */
+				if (enemies[i].y >= 134 || enemies[i].y <= 8)
 				{
-				case 1:
-					gfx_SetTransparentColor(4);
-					break;
+					/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
+					switch (menu.option)
+					{
+					case 1:
+						gfx_SetTransparentColor(4);
+						break;
 
-				case 2:
-					gfx_SetTransparentColor(5);
-					break;
+					case 2:
+						gfx_SetTransparentColor(5);
+						break;
 
-				case 3:
-					gfx_SetTransparentColor(3);
-					break;
+					case 3:
+						gfx_SetTransparentColor(3);
+						break;
+					}
+
+					/* Render the grass block right after the duck  */
+					draw_duck_buffer_layer();
+
+					/* reset transparent color */
+					gfx_SetTransparentColor(0);
 				}
-
-				/* Render the grass block right after the duck  */
-				draw_duck_buffer_layer();
-
-				/* reset transparent color */
-				gfx_SetTransparentColor(0);
+			}
+			else
+			{
+				// Game C
 			}
 		}
 	}
@@ -691,27 +749,6 @@ void init_enemies(uint8_t amount)
 	{
 		/* bool to check if active and not shot */
 		enemies[i].active = true;
-
-		/* Costume Number for animation */
-		enemies[i].cnum = 1;
-
-		/* Setting the a random X position */
-		enemies[i].x = randInt(32, 254);
-
-		/* Check if the random generaotated position going to go over canvas (xpos + width_of_sprite) */
-		if (enemies[i].x + 33 >= 287)
-			enemies[i].x = 287 - (enemies[i].gotoX + 34);
-
-		/* Set the base level y position */
-		enemies[i].y = 167;
-
-		/* Randomly Set the fly position */
-		enemies[i].gotoX = Set_Goto_X();
-		enemies[i].gotoY = Set_Goto_Y();
-
-		/* Reset the if shot and flying angle */
-		enemies[i].shot = false;
-		enemies[i].angle = FACE_RIGHT; // flying angle
 
 		/* Setting duck speed */
 		if (player.round >= 1 && player.round <= 10)
@@ -737,23 +774,52 @@ void init_enemies(uint8_t amount)
 
 		enemies[i].speed = speed;
 
-		/* Sets the duck type */
-		enemies[i].type = randInt(1, 3);
-
-		/* Setting Up the pionts */
-		switch (enemies[i].type)
+		if (menu.option < 3)
 		{
-		case 1:
-			enemies[i].points = 500;
-			break;
+			// Game A and B
+			/* Costume Number for animation */
+			enemies[i].cnum = 1;
 
-		case 2:
-			enemies[i].points = 1000;
-			break;
+			/* Set the base level y position */
+			enemies[i].y = 167;
 
-		case 3:
-			enemies[i].points = 1500;
-			break;
+			/* Setting the a random X position */
+			enemies[i].x = randInt(32, 254);
+
+			/* Check if the random generaotated position going to go over canvas (xpos + width_of_sprite) */
+			if (enemies[i].x + 33 >= 287)
+				enemies[i].x = 287 - (enemies[i].gotoX + 34);
+
+			/* Randomly Set the fly position */
+			enemies[i].gotoX = Set_Goto_X();
+			enemies[i].gotoY = Set_Goto_Y();
+
+			/* Reset the if shot and flying angle */
+			enemies[i].shot = false;
+			enemies[i].angle = FACE_RIGHT; // flying angle
+
+			/* Sets the duck type */
+			enemies[i].type = randInt(1, 3);
+		}
+		else
+		{
+			// Game C
+			/* Costume Number for animation */
+			enemies[i].cnum = 13;
+
+			/* Set the base level y position */
+			enemies[i].y = 167;
+
+			/* Setting the a random X position */
+			enemies[i].x = randInt(32, 254);
+
+			/* Check if the random generaotated position going to go over canvas (xpos + width_of_sprite) */
+			if (enemies[i].x + 33 >= 287)
+				enemies[i].x = 287 - (enemies[i].gotoX + 34);
+
+			/* Randomly Set the fly position */
+			enemies[i].gotoX = Set_Goto_X();
+			enemies[i].gotoY = Set_Goto_Y();
 		}
 	}
 }

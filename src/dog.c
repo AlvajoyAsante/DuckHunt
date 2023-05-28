@@ -1,6 +1,7 @@
 #include "dog.h"
 #include "ducks.h"
 #include "ui.h"
+#include "utils.h"
 #include "menu.h"
 #include "gfx/DUCKSPT.h"
 

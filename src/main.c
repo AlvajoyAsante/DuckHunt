@@ -65,9 +65,9 @@ menu:
 		// #################
 
 		/* Updating layer */
+		update_scene();
 		draw_buffer_layer();
 		update_enemies();
-		update_scene();
 	}
 
 	delay(100);
