@@ -32,7 +32,10 @@ jobs:
         run: |
           echo "CEdev/bin" >> $GITHUB_PATH
           echo $GITHUB_PATH
-
+          
+      - name: Make GFX
+        run: make gfx
+        
       - name: Build DUCKHUNT.8xp
         run: make
 
