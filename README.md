@@ -1,6 +1,8 @@
 # DuckHunt 
 
-![](https://i.imgur.com/CS7h8bO.png)
+<center>
+<img src="./images/banner.png"></img>
+</center>
 
 > Duck Hunt is a classic game that has been enjoyed by generations of gamers. Now, you can experience the thrill of hunting ducks on your TI-84 Plus CE!
 
@@ -50,9 +52,9 @@ Note: If your OS is 5.5 or higher, use the arTIfiCE exploit tool to run the prog
 ## Development
 Current State:
 
-|GAME A|GAME B|GAME C|
-|--|--|--|
-|![](./images/SCREENSHOTS/GAME%20A/SHOWCASE_1.png)|![](./images/SCREENSHOTS/GAME%20B/SHOWCASE_1.png)|![](./images/SCREENSHOTS/GAME%20C/SHOWCASE_1.png)|
+| GAME A                                            | GAME B                                            | GAME C                                            |
+| ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- |
+| ![](./images/SCREENSHOTS/GAME%20A/SHOWCASE_1.png) | ![](./images/SCREENSHOTS/GAME%20B/SHOWCASE_1.png) | ![](./images/SCREENSHOTS/GAME%20C/SHOWCASE_1.png) |
 
 
 > *Keep up to date on the recent development by checking out the [New Discord Server](https://discord.gg/xyUZgnD4UJ "New Discord Server") or on [Cemetech Forums](https://www.cemetech.net/forum/viewtopic.php?t=15070 "Cemetech Forums"). You can also view the [Trello Board](https://trello.com/b/NkkezsJu/duckhunt-development-c) For more information about the development.*
