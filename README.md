@@ -36,6 +36,12 @@ Your screen should look like this (press Enter when it does):
 
 Note: If your OS is 5.5 or higher, use the arTIfiCE exploit tool to run the program: https://yvantt.github.io/arTIfiCE/.
 
+## How to Play
+<html>
+ <object data="./docs/DUCKHUNT_MANUAL.pdf" type="application/pdf" width="100%" height="500px">
+      <p>Unable to display PDF file. <a href="./docs/DUCKHUNT_MANUAL.pdf">Download</a> instead.</p>
+    </object>
+</html>
 
 ## Controls 
 
