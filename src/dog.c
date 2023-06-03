@@ -16,6 +16,8 @@ void dog_SetMode(uint8_t mode)
 	dog.mode = mode;
 	dog.speed = 1;
 	dog.tick = 1;
+	dog.animate = 0;
+	dog.back_buffer = NULL;
 
 	switch (mode)
 	{
@@ -49,6 +51,13 @@ void dog_SetMode(uint8_t mode)
 		dog.gotoY = dog.y - 30;
 
 		break;
+
+	case DOG_LAUGH:
+		dog.cnum = 12;
+		dog.y = 159;
+		dog.gotoY = dog.y - 30;
+		dog.x = (LCD_WIDTH - dog_laugh_1_width) / 2;
+		break;
 	}
 }
 
@@ -79,16 +88,19 @@ static void dog_manage_cnum(void)
 	case 6:
 		dog.cnum = 5;
 		break;
+
+	case 12:
+		dog.cnum = 13;
+		break;
+
+	case 13:
+		dog.cnum = 12;
+		break;
 	}
 }
 
 static void dog_animate(void)
 {
-	if (dog.animate == TIMER_ANIMATE_MAX)
-	{
-		dog_manage_cnum();
-	}
-
 	switch (dog.cnum)
 	{
 	case 1:
@@ -134,78 +146,36 @@ static void dog_animate(void)
 	case 11:
 		gfx_TransparentSprite(dog_bird_2, dog.x, dog.y);
 		break;
+
+	case 12:
+		gfx_TransparentSprite(dog_laugh_1, dog.x, dog.y);
+		break;
+
+	case 13:
+		gfx_TransparentSprite(dog_laugh_2, dog.x, dog.y);
+		break;
 	}
-}
 
-static void draw_back(void)
-{
-	gfx_sprite_t *temp = NULL;
-
-	// tree
-	temp = gfx_MallocSprite(bg_tree_width, bg_tree_height);
-	zx7_Decompress(temp, bg_tree_compressed);
-	gfx_TransparentSprite(temp, 44, 39);
-	free(temp);
-
-	// bush
-	temp = gfx_MallocSprite(bg_bush_width, bg_bush_height);
-	zx7_Decompress(temp, bg_bush_compressed);
-	gfx_TransparentSprite(temp, 218, 132);
-	free(temp);
-}
-
-static void draw_grass(void)
-{
-	gfx_sprite_t *temp = NULL;
-
-	// Grass
-	temp = gfx_MallocSprite(bg_ground_width, bg_ground_height);
-	zx7_Decompress(temp, bg_ground_compressed);
-	gfx_TransparentSprite(temp, 32, 156);
-
-	free(temp);
-
-	// bullet board
-	temp = gfx_MallocSprite(bullet_board_width, bullet_board_height);
-	zx7_Decompress(temp, bullet_board_compressed);
-	gfx_TransparentSprite(temp, 52, 209);
-	free(temp);
-
-	// kill board
-	temp = gfx_MallocSprite(kill_board_width, kill_board_height);
-	zx7_Decompress(temp, kill_board_compressed);
-	gfx_TransparentSprite(temp, 92, 209);
-	free(temp);
-
-	// score board
-	temp = gfx_MallocSprite(score_board_width, score_board_height);
-	zx7_Decompress(temp, score_board_compressed);
-	gfx_TransparentSprite(temp, 220, 209);
-	free(temp);
-
-	// Print Score Board Information
-	update_scene();
+	if (dog.animate == TIMER_ANIMATE_MAX || dog.mode == DOG_LAUGH)
+	{
+		dog_manage_cnum();
+	}
 }
 
 /**
  * Draws the dog based on the sprite number. (needs work)
  */
-static void dog_Render(void)
+void dog_Render(void)
 {
-
-	gfx_sprite_t *back_buff = NULL;
-
-	back_buff = gfx_MallocSprite(70, 60);
-	gfx_GetSprite(back_buff, dog.x - 10, dog.y - 10);
-
-	if (dog.mode == DOG_PEEK_UP)
+	/* if (dog.mode == DOG_PEEK_UP || dog.mode == DOG_LAUGH)
 	{
 		draw_back();
 	}
-
+ */
+	/* Draw the Sprite of the dog */
 	dog_animate();
 
-	if ((dog.mode == DOG_RUN_TO_CENTER && dog.tick == 3))
+	if ((dog.mode == DOG_RUN_TO_CENTER && dog.tick == 3) || dog.mode == DOG_PEEK_UP || dog.mode == DOG_LAUGH)
 	{
 		/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
 		switch (menu.option)
@@ -220,37 +190,24 @@ static void dog_Render(void)
 		}
 
 		/* Render the grass block right after the duck  */
-		// draw_duck_buffer_layer();
-		gfx_TransparentSprite(back_buff, dog.x - 10, dog.y - 10);
+		// draw_dog_buffer_layer();
+		if (dog.back_buffer != NULL)
+			gfx_TransparentSprite(dog.back_buffer, dog.x - 10, dog.y - 10);
 
 		/* reset transparent color */
 		gfx_SetTransparentColor(0);
 	}
-	else if (dog.mode == DOG_PEEK_UP)
+	/* else if (dog.mode == DOG_PEEK_UP || dog.mode == DOG_LAUGH)
 	{
 		draw_grass();
-	}
-
-	gfx_Blit(1);
-
-	gfx_Sprite(back_buff, dog.x - 10, dog.y - 10);
-	free(back_buff);
+	} */
 }
 
 /**
  * Updates the dog movements based on the dog mode.
  */
-static void dog_Update(void)
+void dog_Update(void)
 {
-	if (dog.animate < TIMER_ANIMATE_MAX)
-	{
-		dog.animate++;
-	}
-	else
-	{
-		dog.animate = 0;
-	}
-
 	switch (dog.mode)
 	{
 	case DOG_RUN_TO_CENTER:
@@ -262,14 +219,21 @@ static void dog_Update(void)
 				dog.animate = TIMER_ANIMATE_MAX;
 				for (int i = 0; i < 3; i++)
 				{
+					get_dog_buffer_layer();
 					dog_Render();
+					// ###############
+					gfx_Blit(1);
+					// ###############
+					draw_dog_buffer_layer();
 					delay(TIMER_ANIMATE_MAX * 50);
 				}
 				dog.cnum = 1;
 				dog.x++;
 				return;
 			}
+
 			dog.x = Goto_Pos(dog.x, 100, dog.speed);
+
 			if (dog.x == 100)
 			{
 				dog.cnum = 7;
@@ -285,12 +249,22 @@ static void dog_Update(void)
 				dog.animate = TIMER_ANIMATE_MAX;
 				for (int i = 0; i < 3; i++)
 				{
+					get_dog_buffer_layer();
 					dog_Render();
+					// ###############
+					gfx_Blit(1);
+					// ###############
+					draw_dog_buffer_layer();
 					delay(TIMER_ANIMATE_MAX * 50);
 				}
 
 				dog.cnum = 7;
+				get_dog_buffer_layer();
 				dog_Render();
+				// ###############
+				gfx_Blit(1);
+				// ###############
+				draw_dog_buffer_layer();
 				delay(TIMER_ANIMATE_MAX * 50);
 			}
 
@@ -312,31 +286,48 @@ static void dog_Update(void)
 		break;
 
 	case DOG_PEEK_UP:
+	case DOG_LAUGH:
 		/* Peek Up */
 		if (dog.tick == 1)
 		{
-			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
 
 			if (dog.y == dog.gotoY)
 			{
+				if (dog.mode == DOG_LAUGH)
+					if (dog.animate < TIMER_ANIMATE_MAX)
+						break;
+
 				dog.tick++;
 				dog.gotoY = dog.y + 30;
 
 				/* Pause when the dog reaches the top */
-				delay(TIMER_ANIMATE_MAX * 50);
+				if (dog.mode == DOG_PEEK_UP)
+				{
+					delay(TIMER_ANIMATE_MAX * 50);
+				}
 			}
+			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
 		}
 
 		/* Peek Down */
 		if (dog.tick == 2)
 		{
 
-			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
-
 			if (dog.y == dog.gotoY)
 				dog.mode = DOG_HIDDEN;
+
+			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
 		}
 		break;
+	}
+
+	if (dog.animate < TIMER_ANIMATE_MAX)
+	{
+		dog.animate++;
+	}
+	else
+	{
+		dog.animate = 0;
 	}
 }
 
@@ -345,9 +336,38 @@ static void dog_Update(void)
  */
 void draw_dog_scene(void)
 {
-	while (dog.mode != DOG_HIDDEN)
+	do
 	{
+		get_dog_buffer_layer();
 		dog_Render();
+
+		// ###############
+		gfx_Blit(1);
+		// ###############
+
+		draw_dog_buffer_layer();
 		dog_Update();
+	} while (dog.mode != DOG_HIDDEN);
+}
+
+void get_dog_buffer_layer(void)
+{
+	if (dog.back_buffer == NULL)
+		dog.back_buffer = gfx_MallocSprite(70, 60);
+
+	gfx_GetSprite(dog.back_buffer, dog.x - 10, dog.y - 10);
+}
+
+void draw_dog_buffer_layer(void)
+{
+	if (dog.back_buffer != NULL)
+	{
+		/* Render player back buffer*/
+		gfx_Sprite(dog.back_buffer, dog.x - 10, dog.y - 10);
+
+		/* Free the back buffer */
+		free(dog.back_buffer);
 	}
+
+	dog.back_buffer = NULL;
 }
