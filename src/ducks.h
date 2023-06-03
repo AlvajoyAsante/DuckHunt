@@ -4,6 +4,13 @@
 #include <tice.h>
 #include <graphx.h>
 
+enum DUCK_ACTIONS
+{
+	DUCK_SHOT = 1,
+	DUCK_FLYAWAY = 2,
+	DUCK_FORCED_FLYAWAY = 3
+};
+
 /* Enemies information */
 struct enemies_t
 {

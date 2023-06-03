@@ -48,7 +48,7 @@ struct game_t
     int advance_amount;
 
     // Enemy hit tracker use HUD
-    bool duck_hits[10];
+    int duck_hits[10];
 
     // total hit attempts
     int total_hits;
@@ -61,6 +61,8 @@ struct game_t
 extern struct game_t game;
 
 /* Rendering Screen */
+void bubble_sort_hit_panel(void);
+
 /**
  * @brief Initialise the Game based on menu option
  *

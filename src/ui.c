@@ -8,6 +8,44 @@
 
 struct game_t game;
 
+/* https://www.geeksforgeeks.org/bubble-sort/# */
+static void swap(int *xp, int *yp)
+{
+	int temp = *xp;
+	*xp = *yp;
+	*yp = temp;
+}
+
+void bubble_sort_hit_panel(void)
+{
+	int i, j;
+	bool swapped;
+
+	for (i = 0; i < 10 - 1; i++)
+	{
+		swapped = false;
+		for (j = 0; j < 10 - i - 1; j++)
+		{
+			if (game.duck_hits[j] > game.duck_hits[j + 1])
+			{
+				swap(&game.duck_hits[j], &game.duck_hits[j + 1]);
+				swapped = true;
+
+				update_scene();
+				gfx_Blit(1);
+				delay(50);
+			}
+		}
+
+		// If no two elements were swapped by inner loop,
+		// then break
+		if (swapped == false)
+			break;
+	}
+
+	delay(300);
+}
+
 static void flyaway_scene(void)
 {
 	gfx_sprite_t *temp = gfx_MallocSprite(fly_away_width, fly_away_height);
@@ -97,7 +135,7 @@ void update_scene(void)
 		if (menu.option < 3)
 		{
 			// Game A and B
-			if (game.duck_hits[i])
+			if (game.duck_hits[i] == DUCK_SHOT)
 			{
 				zx7_Decompress(temp, panel_icon_2_compressed);
 			}
@@ -454,6 +492,7 @@ void init_duckhunt(void)
 	}
 }
 
+/* HUD UPDATING */
 void reset_duck_hits(void)
 {
 	for (int i = 0; i < 10; i++)
@@ -466,7 +505,7 @@ int get_duck_hits_amount(void)
 
 	for (int i = 0; i < 10; i++)
 	{
-		if (game.duck_hits[i] == 1)
+		if (game.duck_hits[i] == DUCK_SHOT || game.duck_hits[i] == DUCK_FLYAWAY || game.duck_hits[i] == DUCK_FORCED_FLYAWAY)
 		{
 			tick++;
 		}

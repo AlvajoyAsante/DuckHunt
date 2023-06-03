@@ -545,7 +545,9 @@ void update_enemies(void)
 			{
 				DUCK_FLYAWAY_TIMER = 0;
 			}
-		}else{
+		}
+		else
+		{
 			DUCK_FLYAWAY_TIMER++;
 		}
 	}
@@ -569,7 +571,7 @@ void update_enemies(void)
 
 					if (enemies[i].cnum < 10)
 					{
-						// game.duck_hits[get_duck_hits_amount()] = 0;
+						game.duck_hits[get_duck_hits_amount()] = DUCK_FORCED_FLYAWAY;
 						enemies[i].cnum = 10;
 						GAME_TOTAL_HITS++;
 					}
@@ -590,7 +592,7 @@ void update_enemies(void)
 						/* Set the costume to 10 */
 						if (enemies[i].cnum < 10)
 						{
-							// game.duck_hits[get_duck_hits_amount()] = 0;
+							game.duck_hits[get_duck_hits_amount()] = DUCK_FLYAWAY;
 							enemies[i].cnum = 10;
 							GAME_TOTAL_HITS++;
 						}
@@ -740,6 +742,7 @@ void update_enemies(void)
 			/* Check if player has ran through 10 ducks */
 			if (GAME_TOTAL_HITS > 9)
 			{
+				bubble_sort_hit_panel();
 
 				if (get_duck_hits_amount() >= GAME_ADVANCE_THRESHOLD)
 				{
