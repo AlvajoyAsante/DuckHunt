@@ -162,16 +162,66 @@ static void dog_animate(void)
 	}
 }
 
+
+static void draw_back(void)
+{
+	gfx_sprite_t *temp = NULL;
+
+	// tree
+	temp = gfx_MallocSprite(bg_tree_width, bg_tree_height);
+	zx7_Decompress(temp, bg_tree_compressed);
+	gfx_TransparentSprite(temp, 44, 39);
+	free(temp);
+
+	// bush
+	temp = gfx_MallocSprite(bg_bush_width, bg_bush_height);
+	zx7_Decompress(temp, bg_bush_compressed);
+	gfx_TransparentSprite(temp, 218, 132);
+	free(temp);
+}
+
+static void draw_grass(void)
+{
+	gfx_sprite_t *temp = NULL;
+
+	// Grass
+	temp = gfx_MallocSprite(bg_ground_width, bg_ground_height);
+	zx7_Decompress(temp, bg_ground_compressed);
+	gfx_TransparentSprite(temp, 32, 156);
+	free(temp);
+
+	// bullet board
+	temp = gfx_MallocSprite(bullet_board_width, bullet_board_height);
+	zx7_Decompress(temp, bullet_board_compressed);
+	gfx_TransparentSprite(temp, 52, 209);
+	free(temp);
+
+	// kill board
+	temp = gfx_MallocSprite(kill_board_width, kill_board_height);
+	zx7_Decompress(temp, kill_board_compressed);
+	gfx_TransparentSprite(temp, 92, 209);
+	free(temp);
+
+	// score board
+	temp = gfx_MallocSprite(score_board_width, score_board_height);
+	zx7_Decompress(temp, score_board_compressed);
+	gfx_TransparentSprite(temp, 220, 209);
+	free(temp);
+
+	// Print Score Board Information
+	update_scene();
+}
+
 /**
  * Draws the dog based on the sprite number. (needs work)
  */
 void dog_Render(void)
 {
-	/* if (dog.mode == DOG_PEEK_UP || dog.mode == DOG_LAUGH)
+	if (dog.mode == DOG_PEEK_UP)
 	{
 		draw_back();
 	}
- */
+ 
 	/* Draw the Sprite of the dog */
 	dog_animate();
 
@@ -197,10 +247,10 @@ void dog_Render(void)
 		/* reset transparent color */
 		gfx_SetTransparentColor(0);
 	}
-	/* else if (dog.mode == DOG_PEEK_UP || dog.mode == DOG_LAUGH)
+	else if (dog.mode == DOG_PEEK_UP)
 	{
 		draw_grass();
-	} */
+	} 
 }
 
 /**
