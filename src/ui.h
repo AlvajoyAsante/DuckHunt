@@ -20,7 +20,7 @@
 
 /* Fly Away Information */
 #define DUCK_FLYAWAY_TIMER game.force_flyaway_timer
-#define DUCK_FLYAWAY_MAX  5000
+#define DUCK_FLYAWAY_MAX  900
 
 #include <tice.h>
 #include <graphx.h>
