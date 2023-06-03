@@ -63,6 +63,7 @@ static int Set_Goto_X(void)
 
 static void enemies_manage_cnum(uint8_t pos)
 {
+	int distance = get_distance(enemies[pos].x, enemies[pos].y, enemies[pos].gotoX, enemies[pos].gotoY);
 
 	if (enemies[pos].cnum == 3 || enemies[pos].cnum == 6)
 	{
@@ -124,17 +125,20 @@ static void enemies_manage_cnum(uint8_t pos)
 		break;
 
 	case 13:
-		enemies[pos].cnum = 14;
+		if (distance < 50)
+			enemies[pos].cnum = 14;
 		break;
 
 	case 14:
-		enemies[pos].cnum = 15;
+		if (distance < 30)
+			enemies[pos].cnum = 15;
 		break;
 
-	case 15:
-		// This case is not need but here for visuals
-		enemies[pos].cnum = 13;
-		break;
+		/* case 15:
+			// This case is not need but here for visuals
+			if (distance < 10)
+			enemies[pos].cnum = 13;
+			break; */
 	}
 
 	return;
@@ -525,19 +529,24 @@ void update_enemies(void)
 {
 	uint8_t speed;
 
-	if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
+	if (menu.option < 3)
 	{
-		if (dog.mode != DOG_LAUGH)
+		if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
 		{
-			dog_SetMode(DOG_LAUGH);
-		}
+			if (dog.mode != DOG_LAUGH)
+			{
+				dog_SetMode(DOG_LAUGH);
+			}
 
-		draw_dog_buffer_layer();
-		dog_Update();
+			draw_dog_buffer_layer();
+			dog_Update();
 
-		if (dog.mode == DOG_HIDDEN)
-		{
-			DUCK_FLYAWAY_TIMER = 0;
+			if (dog.mode == DOG_HIDDEN)
+			{
+				DUCK_FLYAWAY_TIMER = 0;
+			}
+		}else{
+			DUCK_FLYAWAY_TIMER++;
 		}
 	}
 
@@ -718,11 +727,6 @@ void update_enemies(void)
 		}
 	}
 
-	if (DUCK_FLYAWAY_TIMER != DUCK_FLYAWAY_MAX)
-	{
-		DUCK_FLYAWAY_TIMER++;
-	}
-
 	/* Checks if the all ducks have fallen */
 	if (get_inactive_enemies() == DUCK_AMOUNT)
 	{
@@ -786,7 +790,7 @@ void update_enemies(void)
 /* Draws every duck sprite based on its animation # */
 void draw_enemies(void)
 {
-	if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
+	if (menu.option < 3 && DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
 	{
 		if (dog.mode == DOG_LAUGH)
 		{
@@ -834,8 +838,8 @@ void draw_enemies(void)
 			else
 			{
 				// Game C
-				gfx_SetColor(0);
-				gfx_Line(enemies[i].x, enemies[i].y, enemies[i].gotoX, enemies[i].gotoY);
+				// gfx_SetColor(0);
+				// gfx_Line(enemies[i].x, enemies[i].y, enemies[i].gotoX, enemies[i].gotoY);
 			}
 		}
 	}
@@ -1028,7 +1032,9 @@ void get_duck_buffer_layer(void)
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		if (enemies[i].back_buffer == NULL)
+		{
 			enemies[i].back_buffer = gfx_MallocSprite(38, 38);
+		}
 
 		gfx_GetSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
 	}
