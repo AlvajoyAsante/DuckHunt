@@ -225,7 +225,7 @@ void dog_Render(void)
 	/* Draw the Sprite of the dog */
 	dog_animate();
 
-	if ((dog.mode == DOG_RUN_TO_CENTER && dog.tick == 3) || dog.mode == DOG_PEEK_UP || dog.mode == DOG_LAUGH)
+	if ((dog.mode == DOG_RUN_TO_CENTER && dog.tick == 3) || dog.mode == DOG_LAUGH)
 	{
 		/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
 		switch (menu.option)
@@ -246,8 +246,9 @@ void dog_Render(void)
 
 		/* reset transparent color */
 		gfx_SetTransparentColor(0);
-	}
-	else if (dog.mode == DOG_PEEK_UP)
+	} 
+	
+	if (dog.mode == DOG_PEEK_UP)
 	{
 		draw_grass();
 	} 

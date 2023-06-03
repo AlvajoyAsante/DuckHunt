@@ -5,7 +5,7 @@
 #include <graphx.h>
 
 /* Dog modes */
-enum DogMode
+enum DOG_ACTIONS
 {
 	DOG_HIDDEN = 0,
 	DOG_RUN_TO_CENTER = 1,
