@@ -58,11 +58,11 @@ static void shoot(void)
 	gfx_sprite_t *back_buffer;
 
 	/* Return can't shoot just yet! */
-	if (player.timer < TIMER_RECOIL_MAX)
+	if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
 		return;
 
 	/* Check if there is bullets to shoot */
-	if (player.bullets > 0)
+	if (player.bullets != 0)
 	{
 		player.bullets--;
 	}
@@ -125,11 +125,14 @@ static void shoot(void)
 
 	gfx_Blit(1);
 
-	delay(30);
+	delay(50);
 
 	gfx_Sprite(back_buffer, player.x - 10, player.y - 10);
 
 	free(back_buffer);
+
+	/* Reset Fly Away timer */
+	DUCK_FLYAWAY_TIMER = 0;
 }
 
 bool player_keys(void)
@@ -140,19 +143,19 @@ bool player_keys(void)
 
 	/* Updates the player timer for shooting recoil */
 	if (player.timer < TIMER_RECOIL_MAX)
-	{
 		player.timer++;
-	}
 
 	/* Check for exit */
 	if (kb_Data[1] == kb_Del)
 		return 0;
 
 	/* if there is nothing in dog.mode then user can mover the cursor. */
-
 	if (kb_Data[1] == kb_2nd)
 	{
-		shoot();
+		if (player.timer == TIMER_RECOIL_MAX)
+		{
+			shoot();
+		}
 		return 1;
 	}
 
@@ -287,14 +290,38 @@ void draw_player(void)
 	gfx_sprite_t *temp;
 
 	/* Checks if the player has bullets */
-	if (player.bullets > 0)
+	if (player.bullets == 0 || DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
+		return;
+
+	/* Render crosshair cursor */
+	temp = gfx_MallocSprite(crosshair_width, crosshair_height);
+	zx7_Decompress(temp, crosshair_compressed);
+
+	gfx_TransparentSprite(temp, player.x - 12, player.y - 12);
+
+	free(temp);
+}
+
+void get_player_buffer_layer(void)
+{
+	/* Allocate space for back buffer */
+	if (player.back_buffer == NULL)
+		player.back_buffer = gfx_MallocSprite(crosshair_width, crosshair_height);
+
+	/* Grab player back buffer */
+	gfx_GetSprite(player.back_buffer, player.x - 12, player.y - 12);
+}
+
+void draw_player_buffer_layer(void)
+{
+	if (player.back_buffer != NULL)
 	{
-		/* Render crosshair cursor */
-		temp = gfx_MallocSprite(crosshair_width, crosshair_height);
-		zx7_Decompress(temp, crosshair_compressed);
+		/* Render player back buffer*/
+		gfx_Sprite(player.back_buffer, player.x - 12, player.y - 12);
 
-		gfx_TransparentSprite(temp, player.x - 12, player.y - 12);
-
-		free(temp);
+		/* Free player back buffer */
+		free(player.back_buffer);
 	}
+
+	player.back_buffer = NULL;
 }

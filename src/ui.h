@@ -4,17 +4,23 @@
 #define DUCKHUNT_VERSION "PRE-ALPHA"
 #define TIMER_ANIMATE_MAX 4
 
+/* Canvas Information */
 #define GAME_CANVAS_X_MIN 32
 #define GAME_CANVAS_X_MAX 287
 #define GAME_CANVAS_Y_MIN 8
 #define GAME_CANVAS_Y_MAX 230
 
+/* Game Information */
 #define DUCK_FALLEN_AMOUNT game.amount_fallen
 #define DUCK_FALLEN_ID game.fallen_id
 #define DUCK_AMOUNT game.enemies_amount
 #define GAME_HIGH_SCORE game.high_score
 #define GAME_ADVANCE_THRESHOLD game.advance_amount
 #define GAME_TOTAL_HITS game.total_hits
+
+/* Fly Away Information */
+#define DUCK_FLYAWAY_TIMER game.force_flyaway_timer
+#define DUCK_FLYAWAY_MAX  5000
 
 #include <tice.h>
 #include <graphx.h>
@@ -23,7 +29,7 @@
 /* Game Information */
 struct game_t
 {
-    // Determines wethier the game started
+    // Determines wether the game started
     bool start;
 
     // Amount of enemies fallen
@@ -46,6 +52,11 @@ struct game_t
 
     // total hit attempts
     int total_hits;
+
+    // Duck Fly away timer
+    int force_flyaway_timer;
+
+    bool forced_flyaway;
 };
 extern struct game_t game;
 
@@ -94,11 +105,5 @@ void get_buffer_layer(void);
  *
  */
 void draw_buffer_layer(void);
-
-/**
- * @brief Renders buffer layer of the enemies
- *
- */
-void draw_duck_buffer_layer(void);
 
 #endif

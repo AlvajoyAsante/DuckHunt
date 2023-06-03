@@ -44,21 +44,33 @@ extern struct enemies_t enemies[5];
 
 /**
  * @brief Renders enemies information
- * 
+ *
  */
 void draw_enemies(void);
 
 /**
  * @brief Updates enemies information
- * 
+ *
  */
 void update_enemies(void);
 
 /**
  * @brief Initialise enemies
- * 
+ *
  * @param amount amount of enemies you want to Initialise
  */
 void init_enemies(uint8_t amount);
+
+/**
+ * @brief Draw the duck buffer layer
+ *
+ */
+void draw_duck_buffer_layer(void);
+
+/**
+ * @brief Get the duck buffer layer
+ *
+ */
+void get_duck_buffer_layer(void);
 
 #endif

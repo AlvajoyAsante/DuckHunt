@@ -49,7 +49,7 @@ menu:
 	/* Game play begins here */
 	draw_scene();
 
-	while (player_keys())
+	do
 	{
 		/* Grabbing Buffer Layer */
 		get_buffer_layer();
@@ -68,7 +68,7 @@ menu:
 		update_scene();
 		draw_buffer_layer();
 		update_enemies();
-	}
+	}while (player_keys());
 
 	delay(100);
 

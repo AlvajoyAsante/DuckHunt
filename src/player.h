@@ -48,4 +48,16 @@ bool player_keys(void);
  */
 void draw_player(void);
 
+/**
+ * @brief Get the player buffer layer object
+ *
+ */
+void get_player_buffer_layer(void);
+
+/**
+ * @brief Draw the player buffer layer object
+ *
+ */
+void draw_player_buffer_layer(void);
+
 #endif

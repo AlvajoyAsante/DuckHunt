@@ -68,10 +68,11 @@ void update_scene(void)
 		gfx_FillRectangle(57, 204, 20, 7);
 	}
 
+	temp = gfx_MallocSprite(bullet_width, bullet_height);
+	zx7_Decompress(temp, bullet_compressed);
+
 	for (int i = 0; i < player.bullets; i++)
 	{
-		temp = gfx_MallocSprite(bullet_width, bullet_height);
-		zx7_Decompress(temp, bullet_compressed);
 
 		if (menu.option < 3)
 		{
@@ -83,9 +84,9 @@ void update_scene(void)
 			// Game C
 			gfx_TransparentSprite(temp, 57 + (i * (4 + 4)), 204);
 		}
-
-		free(temp);
 	}
+
+	free(temp);
 
 	/* Hit Panel */
 
@@ -255,9 +256,10 @@ static int count_digits(int number)
  */
 void draw_scene(void)
 {
-	gfx_sprite_t *back_buffer, *temp;
+	gfx_sprite_t *temp;
 
 	game.start = false;
+	DUCK_FLYAWAY_TIMER = 0;
 
 	gfx_FillScreen(2); // BLACK
 
@@ -306,10 +308,11 @@ void draw_scene(void)
 		gfx_TransparentSprite(temp, 32, 156);
 		free(temp);
 
-		back_buffer = gfx_MallocSprite(1, bg_ground_height);
-		gfx_GetSprite(back_buffer, 286, 156);
-		gfx_Sprite(back_buffer, 287, 156);
-		free(back_buffer);
+		// Duplicated Last line
+		temp = gfx_MallocSprite(1, bg_ground_height);
+		gfx_GetSprite(temp, 286, 156);
+		gfx_Sprite(temp, 287, 156);
+		free(temp);
 
 		// bullet board
 		temp = gfx_MallocSprite(bullet_board_width, bullet_board_height);
@@ -379,10 +382,10 @@ void draw_scene(void)
 		gfx_TransparentSprite(temp, 32, 183);
 		free(temp);
 
-		back_buffer = gfx_MallocSprite(1, c_panel_height + c_ground_height + c_mountain_height);
-		gfx_GetSprite(back_buffer, 286, 95);
-		gfx_Sprite(back_buffer, 287, 95);
-		free(back_buffer);
+		temp = gfx_MallocSprite(1, c_panel_height + c_ground_height + c_mountain_height);
+		gfx_GetSprite(temp, 286, 95);
+		gfx_Sprite(temp, 287, 95);
+		free(temp);
 
 		gfx_SetColor(7); // Gray
 		gfx_FillRectangle(32, 191, 256, 40);
@@ -473,61 +476,20 @@ int get_duck_hits_amount(void)
 }
 
 // New functions to help with rendering.
-/**
- * This function grabs buffer sprite.
- */
 void get_buffer_layer(void)
 {
-	/* Allocate space for back buffer */
-	player.back_buffer = gfx_MallocSprite(crosshair_width, crosshair_height);
+	get_player_buffer_layer();
+	get_duck_buffer_layer();
 
-	/* Grab player back buffer */
-	gfx_GetSprite(player.back_buffer, player.x - 12, player.y - 12);
-
-	for (int i = 0; i < DUCK_AMOUNT; i++)
-	{
-		/* Allocate space for back buffer */
-		enemies[i].back_buffer = gfx_MallocSprite(38, 38);
-
-		/* Grab duck back buffer */
-		gfx_GetSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
-	}
+	if (dog.mode != DOG_HIDDEN)
+		get_dog_buffer_layer();
 }
 
-/**
- * @brief Free the sprite from buffers
- *
- */
-static void free_buffer_layer(void)
-{
-	/* Free player back buffer */
-	free(player.back_buffer);
-
-	/* Free duck back buffer */
-	for (int i = 0; i < DUCK_AMOUNT; i++)
-	{
-		free(enemies[i].back_buffer);
-	}
-}
-
-/**
- * This draws any sprite buffered from "get_buffer_layer"
- */
 void draw_buffer_layer(void)
 {
-	/* Render player back buffer*/
-	gfx_Sprite(player.back_buffer, player.x - 12, player.y - 12);
-
-	/* Render duck back buffer */
+	draw_player_buffer_layer();
 	draw_duck_buffer_layer();
 
-	free_buffer_layer();
-}
-
-void draw_duck_buffer_layer(void)
-{
-	for (int i = 0; i < DUCK_AMOUNT; i++)
-	{
-		gfx_TransparentSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
-	}
+	if (dog.mode != DOG_HIDDEN)
+		draw_dog_buffer_layer();
 }

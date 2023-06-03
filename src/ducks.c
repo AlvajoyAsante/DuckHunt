@@ -133,6 +133,7 @@ static void enemies_manage_cnum(uint8_t pos)
 
 	case 15:
 		// This case is not need but here for visuals
+		enemies[pos].cnum = 13;
 		break;
 	}
 
@@ -481,6 +482,19 @@ static void enemies_render_sprites(uint8_t pos)
 	free(sprite_buff);
 }
 
+static int get_active_enemies(void)
+{
+	int tick = 0;
+	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		if (enemies[i].active)
+		{
+			tick++;
+		}
+	}
+	return tick;
+}
+
 static int get_inactive_enemies(void)
 {
 	int tick = 0;
@@ -509,15 +523,51 @@ static int get_inactive_shot_enemies(void)
 
 void update_enemies(void)
 {
+	uint8_t speed;
+
+	if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
+	{
+		if (dog.mode != DOG_LAUGH)
+		{
+			dog_SetMode(DOG_LAUGH);
+		}
+
+		draw_dog_buffer_layer();
+		dog_Update();
+
+		if (dog.mode == DOG_HIDDEN)
+		{
+			DUCK_FLYAWAY_TIMER = 0;
+		}
+	}
+
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		if (enemies[i].active)
 		{
-			if (menu.option)
+			if (menu.option < 3)
 			{
-				// Fly away init
+				// Game A and B
+
+				/* Check if the player hasn't shot */
+				if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
+				{
+					enemies[i].angle = DUCK_FALLING;
+					enemies[i].gotoX = enemies[i].x;
+					enemies[i].gotoY = -20;
+					enemies[i].speed = 4;
+					enemies[i].fly_away = true;
+
+					if (enemies[i].cnum < 10)
+					{
+						// game.duck_hits[get_duck_hits_amount()] = 0;
+						enemies[i].cnum = 10;
+						GAME_TOTAL_HITS++;
+					}
+				}
+
 				/* If there zero bullets left */
-				if (player.bullets < 1)
+				if (!player.bullets)
 				{
 					/* Check if the duck is not shot  */
 					if (!enemies[i].shot)
@@ -531,8 +581,8 @@ void update_enemies(void)
 						/* Set the costume to 10 */
 						if (enemies[i].cnum < 10)
 						{
-							enemies[i].cnum = 10;
 							// game.duck_hits[get_duck_hits_amount()] = 0;
+							enemies[i].cnum = 10;
 							GAME_TOTAL_HITS++;
 						}
 					}
@@ -618,6 +668,42 @@ void update_enemies(void)
 			else
 			{
 				// Game C Updating
+
+				/* Updating the X position */
+				if (enemies[i].x != enemies[i].gotoX)
+				{
+					speed = abs(enemies[i].gotoX - enemies[i].x) / (enemies[i].speed + 5);
+
+					if (enemies[i].x < enemies[i].gotoX)
+					{
+						enemies[i].x += speed;
+					}
+					else
+					{
+						enemies[i].x -= speed;
+					}
+				}
+				else
+				{
+				}
+
+				/* Updating the Y position  */
+				if (enemies[i].y != enemies[i].gotoY)
+				{
+					speed = abs(enemies[i].gotoY - enemies[i].y) / (enemies[i].speed + 5);
+
+					if (enemies[i].y < enemies[i].gotoY)
+					{
+						enemies[i].y += speed;
+					}
+					else
+					{
+						enemies[i].y -= speed;
+					}
+				}
+				else
+				{
+				}
 			}
 
 			/* Animation timer */
@@ -632,15 +718,25 @@ void update_enemies(void)
 		}
 	}
 
+	if (DUCK_FLYAWAY_TIMER != DUCK_FLYAWAY_MAX)
+	{
+		DUCK_FLYAWAY_TIMER++;
+	}
+
 	/* Checks if the all ducks have fallen */
 	if (get_inactive_enemies() == DUCK_AMOUNT)
 	{
+		if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
+		{
+			return;
+		}
 
 		if (menu.option < 3)
 		{
 			/* Check if player has ran through 10 ducks */
 			if (GAME_TOTAL_HITS > 9)
 			{
+
 				if (get_duck_hits_amount() >= GAME_ADVANCE_THRESHOLD)
 				{
 					/* Reset bullets and increase rounds */
@@ -690,47 +786,56 @@ void update_enemies(void)
 /* Draws every duck sprite based on its animation # */
 void draw_enemies(void)
 {
+	if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
+	{
+		if (dog.mode == DOG_LAUGH)
+		{
+			get_dog_buffer_layer();
+			dog_Render();
+		}
+	}
+
 	/* Draws and updates all the ducks */
 	for (int i = 0; i < DUCK_AMOUNT; i++)
 	{
 		/* Checks if the duck is active */
 		if (enemies[i].active)
 		{
+
 			/* Animate the duck sprites */
 			enemies_render_sprites(i);
 
 			if (menu.option < 3)
 			{
 				// Game A and B
-				/* Render the grass if the duck is a certain */
-				if (enemies[i].y >= 134 || enemies[i].y <= 8)
+				/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
+				switch (menu.option)
 				{
-					/* Set the transparent color of the duck based on the player game mode (aka menu.option) */
-					switch (menu.option)
-					{
-					case 1:
-						gfx_SetTransparentColor(4);
-						break;
+				case 1:
+					gfx_SetTransparentColor(4);
+					break;
 
-					case 2:
-						gfx_SetTransparentColor(5);
-						break;
+				case 2:
+					gfx_SetTransparentColor(5);
+					break;
 
-					case 3:
-						gfx_SetTransparentColor(3);
-						break;
-					}
-
-					/* Render the grass block right after the duck  */
-					draw_duck_buffer_layer();
-
-					/* reset transparent color */
-					gfx_SetTransparentColor(0);
+				case 3:
+					gfx_SetTransparentColor(3);
+					break;
 				}
+
+				/* Render the grass block right after the duck  */
+				if (enemies[i].back_buffer != NULL)
+					gfx_TransparentSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
+
+				/* reset transparent color */
+				gfx_SetTransparentColor(0);
 			}
 			else
 			{
 				// Game C
+				gfx_SetColor(0);
+				gfx_Line(enemies[i].x, enemies[i].y, enemies[i].gotoX, enemies[i].gotoY);
 			}
 		}
 	}
@@ -746,6 +851,99 @@ void init_enemies(uint8_t amount)
 	DUCK_AMOUNT = amount;
 
 	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		/* bool to check if active and not shot */
+		enemies[i].active = true;
+
+		enemies[i].back_buffer = NULL;
+
+		/* Setting duck speed */
+		if (player.round >= 1 && player.round <= 10)
+		{
+			speed = randInt(1, 3);
+		}
+		else if (player.round >= 11 && player.round <= 12)
+		{
+			speed = randInt(2, 5);
+		}
+		else if (player.round >= 13 && player.round <= 14)
+		{
+			speed = randInt(3, 6);
+		}
+		else if (player.round >= 15 && player.round <= 19)
+		{
+			speed = randInt(4, 7);
+		}
+		else
+		{
+			speed = randInt(5, 8);
+		}
+
+		enemies[i].speed = speed;
+
+		if (menu.option < 3)
+		{
+			// Game A and B
+			/* Costume Number for animation */
+			enemies[i].cnum = 1;
+
+			/* Set the base level y position */
+			enemies[i].y = 167;
+
+			/* Setting the a random X position */
+			enemies[i].x = randInt(32, 254);
+
+			/* Check if the random generaotated position going to go over canvas (xpos + width_of_sprite) */
+			if (enemies[i].x + 33 >= 287)
+				enemies[i].x = 287 - (enemies[i].gotoX + 34);
+
+			/* Randomly Set the fly position */
+			enemies[i].gotoX = Set_Goto_X();
+			enemies[i].gotoY = Set_Goto_Y();
+
+			/* Reset the if shot and flying angle */
+			enemies[i].shot = false;
+			enemies[i].angle = FACE_RIGHT; // flying angle
+
+			/* Sets the duck type */
+			enemies[i].type = randInt(1, 3);
+		}
+		else
+		{
+			// Game C
+			enemies[i].type = 4;
+
+			/* Costume Number for animation */
+			enemies[i].cnum = 13;
+
+			/* Set the base level y position */
+			enemies[i].y = 167;
+
+			/* Setting the a random X position */
+			enemies[i].x = randInt(32, 254);
+
+			/* Check if the random generaotated position going to go over canvas (xpos + width_of_sprite) */
+			if (enemies[i].x + 16 >= GAME_CANVAS_X_MAX)
+				enemies[i].x = GAME_CANVAS_X_MAX - (enemies[i].gotoX + 16);
+
+			/* Randomly Set the fly position */
+			enemies[i].gotoX = Set_Goto_X();
+
+			enemies[i].gotoY = randInt(48, 91);
+		}
+	}
+}
+
+void add_enemies(void)
+{
+	uint8_t speed = 0;
+
+	if (get_active_enemies() == DUCK_AMOUNT)
+	{
+		return;
+	}
+
+	for (int i = get_active_enemies(); i < DUCK_AMOUNT; i++)
 	{
 		/* bool to check if active and not shot */
 		enemies[i].active = true;
@@ -814,12 +1012,39 @@ void init_enemies(uint8_t amount)
 			enemies[i].x = randInt(32, 254);
 
 			/* Check if the random generaotated position going to go over canvas (xpos + width_of_sprite) */
-			if (enemies[i].x + 33 >= 287)
-				enemies[i].x = 287 - (enemies[i].gotoX + 34);
+			if (enemies[i].x + 16 >= GAME_CANVAS_X_MAX)
+				enemies[i].x = GAME_CANVAS_X_MAX - (enemies[i].gotoX + 16);
 
 			/* Randomly Set the fly position */
 			enemies[i].gotoX = Set_Goto_X();
-			enemies[i].gotoY = Set_Goto_Y();
+
+			enemies[i].gotoY = randInt(48, 91);
 		}
+	}
+}
+
+void get_duck_buffer_layer(void)
+{
+	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		if (enemies[i].back_buffer == NULL)
+			enemies[i].back_buffer = gfx_MallocSprite(38, 38);
+
+		gfx_GetSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
+	}
+}
+
+void draw_duck_buffer_layer(void)
+{
+	/* Draw the ducks */
+	for (int i = 0; i < DUCK_AMOUNT; i++)
+	{
+		if (enemies[i].back_buffer != NULL)
+		{
+			gfx_TransparentSprite(enemies[i].back_buffer, enemies[i].x - 1, enemies[i].y - 1);
+			free(enemies[i].back_buffer);
+		}
+
+		enemies[i].back_buffer = NULL;
 	}
 }
