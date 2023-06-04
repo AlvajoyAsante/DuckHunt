@@ -47,7 +47,7 @@ struct enemies_t
 
 	gfx_sprite_t *back_buffer;
 };
-extern struct enemies_t enemies[5];
+extern struct enemies_t enemies[2];
 
 /**
  * @brief Renders enemies information
