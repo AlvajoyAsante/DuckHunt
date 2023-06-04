@@ -80,6 +80,7 @@ converts:
       - DUCKS/Clay_1.png
       - DUCKS/Clay_2.png
       - DUCKS/Clay_3.png
+      - DUCKS/Clay_4.png
 
   - name: game
     palette: palette

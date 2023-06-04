@@ -3,7 +3,7 @@
 
 #define DUCKSPT_HEADER_SIZE 0
 
-unsigned char *DUCKSPT_appvar[74] =
+unsigned char *DUCKSPT_appvar[75] =
 {
     (unsigned char*)0,
     (unsigned char*)52,
@@ -59,26 +59,27 @@ unsigned char *DUCKSPT_appvar[74] =
     (unsigned char*)58921,
     (unsigned char*)59179,
     (unsigned char*)59437,
-    (unsigned char*)59595,
-    (unsigned char*)60403,
-    (unsigned char*)61170,
-    (unsigned char*)61193,
-    (unsigned char*)61216,
-    (unsigned char*)61231,
-    (unsigned char*)61256,
-    (unsigned char*)61276,
-    (unsigned char*)61294,
-    (unsigned char*)61353,
-    (unsigned char*)62029,
-    (unsigned char*)62397,
-    (unsigned char*)62459,
-    (unsigned char*)62535,
-    (unsigned char*)62661,
-    (unsigned char*)62725,
-    (unsigned char*)62820,
-    (unsigned char*)62913,
-    (unsigned char*)62941,
-    (unsigned char*)62977,
+    (unsigned char*)59695,
+    (unsigned char*)59853,
+    (unsigned char*)60661,
+    (unsigned char*)61428,
+    (unsigned char*)61451,
+    (unsigned char*)61474,
+    (unsigned char*)61489,
+    (unsigned char*)61514,
+    (unsigned char*)61534,
+    (unsigned char*)61552,
+    (unsigned char*)61611,
+    (unsigned char*)62287,
+    (unsigned char*)62655,
+    (unsigned char*)62717,
+    (unsigned char*)62793,
+    (unsigned char*)62919,
+    (unsigned char*)62983,
+    (unsigned char*)63078,
+    (unsigned char*)63171,
+    (unsigned char*)63199,
+    (unsigned char*)63235,
 };
 
 unsigned char DUCKSPT_init(void)
@@ -93,7 +94,7 @@ unsigned char DUCKSPT_init(void)
     }
 
     data = (unsigned int)ti_GetDataPtr(appvar) - (unsigned int)DUCKSPT_appvar[0] + DUCKSPT_HEADER_SIZE;
-    for (i = 0; i < 74; i++)
+    for (i = 0; i < 75; i++)
     {
         DUCKSPT_appvar[i] += data;
     }
