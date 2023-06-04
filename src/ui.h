@@ -61,8 +61,6 @@ struct game_t
 extern struct game_t game;
 
 /* Rendering Screen */
-void bubble_sort_hit_panel(void);
-
 /**
  * @brief Initialise the Game based on menu option
  *
@@ -86,14 +84,28 @@ void draw_scene(void);
  * @brief Reset the duck hits on HUD
  *
  */
-void reset_duck_hits(void);
+void reset_hud_hits(void);
 
 /**
- * @brief Get the duck hits amount in `game.duck_hits`
+ * @brief Gets the current position of the duck hits panel
  *
  * @return int amount in of true in boolean array game.duck_hits
  */
-int get_duck_hits_amount(void);
+int get_hud_hits_position(void);
+
+/**
+ * @brief Get the total shot ducks in hits hud
+ * 
+ * @return int total
+ */
+int get_hud_hits_shot(void);
+
+/**
+ * @brief Bubble sort the hits panel from smallest to greatest.
+ * 
+ */
+void bubble_sort_hits_panel(void);
+
 
 /* Buffer Layer Management */
 /**

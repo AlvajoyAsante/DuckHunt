@@ -10,7 +10,7 @@ static void init_settings(void)
 {
     game.high_score = 12000; 
     game.start = game.amount_fallen = game.fallen_id = game.enemies_amount = game.advance_amount = game.total_hits = 0;
-    reset_duck_hits();
+    reset_hud_hits();
 }
 
 void save_game(void)

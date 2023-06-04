@@ -107,7 +107,7 @@ static void shoot(void)
 					player.score += returnReward(i);
 
 					/* Register Hit duck */
-					game.duck_hits[get_duck_hits_amount()] = 1;
+					game.duck_hits[get_hud_hits_position()] = 1;
 
 					DUCK_FALLEN_AMOUNT++;
 					GAME_TOTAL_HITS++;

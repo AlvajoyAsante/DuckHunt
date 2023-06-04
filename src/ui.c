@@ -16,7 +16,7 @@ static void swap(int *xp, int *yp)
 	*yp = temp;
 }
 
-void bubble_sort_hit_panel(void)
+void bubble_sort_hits_panel(void)
 {
 	int i, j;
 	bool swapped;
@@ -44,6 +44,22 @@ void bubble_sort_hit_panel(void)
 	}
 
 	delay(300);
+}
+
+/* Used to get the amount of shot ducks based off the HUD */
+int get_hud_hits_shot(void)
+{
+	int tick = 0;
+
+	for (int i = 0; i < 10; i++)
+	{
+		if (game.duck_hits[i] == DUCK_SHOT)
+		{
+			tick++;
+		}
+	}
+
+	return tick;
 }
 
 static void flyaway_scene(void)
@@ -149,7 +165,7 @@ void update_scene(void)
 			/* Blinking */
 			if (dog.mode != DOG_RUN_TO_CENTER && game.start == true)
 			{
-				if (get_duck_hits_amount() == i)
+				if (get_hud_hits_position() == i)
 				{
 					if (randInt(0, 1))
 					{
@@ -177,7 +193,7 @@ void update_scene(void)
 
 			if (game.start == true)
 			{
-				if (get_duck_hits_amount() == i)
+				if (get_hud_hits_position() == i)
 				{
 					if (randInt(0, 1))
 					{
@@ -470,7 +486,7 @@ void init_duckhunt(void)
 	player.bullets = 3;
 
 	/* HUD setup */
-	reset_duck_hits();
+	reset_hud_hits();
 
 	/* Dog setup */
 	dog_SetMode(DOG_HIDDEN);
@@ -493,13 +509,13 @@ void init_duckhunt(void)
 }
 
 /* HUD UPDATING */
-void reset_duck_hits(void)
+void reset_hud_hits(void)
 {
 	for (int i = 0; i < 10; i++)
 		game.duck_hits[i] = 0;
 }
 
-int get_duck_hits_amount(void)
+int get_hud_hits_position(void)
 {
 	int tick = 0;
 
