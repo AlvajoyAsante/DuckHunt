@@ -16,7 +16,7 @@ enum DUCK_ANGLE
 	FACE_UP_LEFT = 4
 };
 
-struct enemies_t enemies[5];
+struct enemies_t enemies[2];
 
 /* Duck Animations */
 static int Set_Goto_Y(void)
@@ -481,6 +481,10 @@ static void enemies_render_sprites(uint8_t pos)
 	case 15:
 		gfx_TransparentSprite(Clay_3, enemies[pos].x, enemies[pos].y);
 		break;
+
+	case 16:
+		gfx_TransparentSprite(Clay_4, enemies[pos].x, enemies[pos].y);
+		break;
 	}
 
 	free(sprite_buff);
@@ -571,7 +575,7 @@ void update_enemies(void)
 
 					if (enemies[i].cnum < 10)
 					{
-						game.duck_hits[get_duck_hits_amount()] = DUCK_FORCED_FLYAWAY;
+						game.duck_hits[get_hud_hits_position()] = DUCK_FORCED_FLYAWAY;
 						enemies[i].cnum = 10;
 						GAME_TOTAL_HITS++;
 					}
@@ -592,7 +596,7 @@ void update_enemies(void)
 						/* Set the costume to 10 */
 						if (enemies[i].cnum < 10)
 						{
-							game.duck_hits[get_duck_hits_amount()] = DUCK_FLYAWAY;
+							game.duck_hits[get_hud_hits_position()] = DUCK_FLYAWAY;
 							enemies[i].cnum = 10;
 							GAME_TOTAL_HITS++;
 						}
@@ -679,11 +683,10 @@ void update_enemies(void)
 			else
 			{
 				// Game C Updating
-
 				/* Updating the X position */
 				if (enemies[i].x != enemies[i].gotoX)
 				{
-					speed = abs(enemies[i].gotoX - enemies[i].x) / (enemies[i].speed + 5);
+					speed = abs(enemies[i].gotoX - enemies[i].x) / (enemies[i].speed * 4);
 
 					if (enemies[i].x < enemies[i].gotoX)
 					{
@@ -693,6 +696,12 @@ void update_enemies(void)
 					{
 						enemies[i].x -= speed;
 					}
+
+					/* Check if the positin is in the radius of dest point */
+					if (abs(enemies[i].gotoX - enemies[i].x) <= (enemies[i].speed * 2))
+					{
+						enemies[i].x = enemies[i].gotoX;
+					}
 				}
 				else
 				{
@@ -701,7 +710,7 @@ void update_enemies(void)
 				/* Updating the Y position  */
 				if (enemies[i].y != enemies[i].gotoY)
 				{
-					speed = abs(enemies[i].gotoY - enemies[i].y) / (enemies[i].speed + 5);
+					speed = abs(enemies[i].gotoY - enemies[i].y) / (enemies[i].speed * 2);
 
 					if (enemies[i].y < enemies[i].gotoY)
 					{
@@ -711,9 +720,23 @@ void update_enemies(void)
 					{
 						enemies[i].y -= speed;
 					}
+
+					/* Check is the y position is in radius of the destination postion */
+					if (abs(enemies[i].gotoY - enemies[i].y) <= (enemies[i].speed * 2))
+						enemies[i].y = enemies[i].gotoY;
 				}
 				else
 				{
+					// Check if the duck has been shot if not drop
+					enemies[i].angle = DUCK_FALLING;
+
+					// Change costume
+					enemies[i].cnum = 16;
+
+					enemies[i].speed = 8;
+
+					// set new goto y
+					enemies[i].gotoY = 128;
 				}
 			}
 
@@ -742,16 +765,16 @@ void update_enemies(void)
 			/* Check if player has ran through 10 ducks */
 			if (GAME_TOTAL_HITS > 9)
 			{
-				bubble_sort_hit_panel();
+				bubble_sort_hits_panel();
 
-				if (get_duck_hits_amount() >= GAME_ADVANCE_THRESHOLD)
+				if (get_hud_hits_shot() >= GAME_ADVANCE_THRESHOLD)
 				{
 					/* Reset bullets and increase rounds */
 					player.bullets = 3;
 					player.round++;
 
 					/* Reset hit ducks on HUD */
-					reset_duck_hits();
+					reset_hud_hits();
 
 					/* Draw dog scene again */
 					draw_scene();
@@ -780,6 +803,33 @@ void update_enemies(void)
 		else
 		{
 			// GAME C
+
+			/* Check if player has ran through 10 ducks */
+			if (GAME_TOTAL_HITS > 9)
+			{
+				bubble_sort_hits_panel();
+
+				if (get_hud_hits_position() >= GAME_ADVANCE_THRESHOLD)
+				{
+					/* Reset bullets and increase rounds */
+					player.bullets = 3;
+					player.round++;
+
+					/* Reset hit ducks on HUD */
+					reset_hud_hits();
+
+					/* Init new ducks to fly */
+					GAME_TOTAL_HITS = 0;
+					init_enemies(menu.option);
+					return;
+				}
+				else
+				{
+					/* Temporary Game Over Screen */
+					gfx_End();
+					exit(1);
+				}
+			}
 		}
 
 		player.bullets = 3; // Reset Bullets
@@ -864,32 +914,32 @@ void init_enemies(uint8_t amount)
 
 		enemies[i].back_buffer = NULL;
 
-		/* Setting duck speed */
-		if (player.round >= 1 && player.round <= 10)
-		{
-			speed = randInt(1, 3);
-		}
-		else if (player.round >= 11 && player.round <= 12)
-		{
-			speed = randInt(2, 5);
-		}
-		else if (player.round >= 13 && player.round <= 14)
-		{
-			speed = randInt(3, 6);
-		}
-		else if (player.round >= 15 && player.round <= 19)
-		{
-			speed = randInt(4, 7);
-		}
-		else
-		{
-			speed = randInt(5, 8);
-		}
-
-		enemies[i].speed = speed;
-
 		if (menu.option < 3)
 		{
+			/* Setting duck speed */
+			if (player.round >= 1 && player.round <= 10)
+			{
+				speed = randInt(1, 3);
+			}
+			else if (player.round >= 11 && player.round <= 12)
+			{
+				speed = randInt(2, 5);
+			}
+			else if (player.round >= 13 && player.round <= 14)
+			{
+				speed = randInt(3, 6);
+			}
+			else if (player.round >= 15 && player.round <= 19)
+			{
+				speed = randInt(4, 7);
+			}
+			else
+			{
+				speed = randInt(5, 8);
+			}
+
+			enemies[i].speed = speed;
+
 			// Game A and B
 			/* Costume Number for animation */
 			enemies[i].cnum = 1;
@@ -917,6 +967,29 @@ void init_enemies(uint8_t amount)
 		}
 		else
 		{
+			/* Setting duck speed */
+			if (player.round >= 1 && player.round <= 10)
+			{
+				speed = 6;
+			}
+			else if (player.round >= 11 && player.round <= 12)
+			{
+				speed = 6;
+			}
+			else if (player.round >= 13 && player.round <= 14)
+			{
+				speed = 6;
+			}
+			else if (player.round >= 15 && player.round <= 19)
+			{
+				speed = 4;
+			}
+			else
+			{
+				speed = 2;
+			}
+
+			enemies[i].speed = speed;
 			// Game C
 			enemies[i].type = 4;
 
