@@ -4,7 +4,7 @@
 
 NAME         ?= DUCKHUNT
 ICON         ?= icon.png
-DESCRIPTION  ?= "DuckHunt v1.0"
+DESCRIPTION  ?= "(c) 2021-2023, Alvajoy Asante"
 COMPRESSED   ?= YES
 ARCHIVED     ?= NO
 
