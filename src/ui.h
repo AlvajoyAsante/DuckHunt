@@ -1,6 +1,7 @@
 #ifndef UI_H
 #define UI_H
 
+#define UNDER_DEVELOPMENT 1
 #define DUCKHUNT_VERSION "PRE-ALPHA"
 #define TIMER_ANIMATE_MAX 4
 

@@ -13,7 +13,6 @@ bool init_menu(void)
 	gfx_sprite_t *temp_sprite;
 	sk_key_t key;
 
-
 	/* Setting up menu GUI */
 	gfx_FillScreen(2); // Black
 
@@ -132,6 +131,25 @@ bool init_menu(void)
 
 	/* Free the temp sprite used for rendering */
 	free(temp_sprite);
+
+/* Prevent Players from playing game C */
+#if UNDER_DEVELOPMENT
+
+	if (menu.option == 3)
+	{
+		gfx_FillScreen(2);
+
+		gfx_PrintStringXY("Game C is still under development.", 0, 0);
+		gfx_PrintStringXY("Please check development page for updates!", 0, 10);
+		gfx_PrintStringXY("Press any key to exit.", 0, 30);
+		gfx_Blit(1);
+
+		delay(100);
+		while (!os_GetCSC());
+		return false;
+	}
+
+#endif
 
 	/* Start the game based on menu option */
 	init_duckhunt();
