@@ -27,7 +27,15 @@ int main(void)
 
 	/* Check for the sprite appvar */
 	if (!DUCKSPT_init())
+	{
+		os_ClrHome();
+		os_PutStrFull("Missing 'DUCKSPT' File!");
+		os_NewLine();
+		os_PutStrFull("Press any key to exit.");
+		while (!os_GetCSC())
+			;
 		goto end;
+	}
 
 	/* Loading Game Data */
 	load_game();
@@ -51,7 +59,7 @@ menu:
 
 	do
 	{
-		/* Grabbing Buffer Layer */
+		/* Grabbing Buffer Layer of the scene*/
 		get_buffer_layer();
 
 		/* Render layer */
@@ -68,7 +76,7 @@ menu:
 		update_scene();
 		draw_buffer_layer();
 		update_enemies();
-	}while (player_keys());
+	} while (player_keys());
 
 	delay(100);
 
