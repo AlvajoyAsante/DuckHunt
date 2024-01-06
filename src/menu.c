@@ -30,8 +30,14 @@ bool init_menu(void)
 	gfx_PrintString("GAME  A     1  DUCK");
 	gfx_SetTextXY(89, 149);
 	gfx_PrintString("GAME  B     2  DUCK");
+
+#if UNDER_DEVELOPMENT
+	gfx_SetTextXY(89, 164);
+	gfx_PrintString("GAME  C     LOCKED!");
+#else
 	gfx_SetTextXY(89, 164);
 	gfx_PrintString("GAME  C     CLAY  SHOOTING");
+#endif
 
 	/* Render Highscore */
 	gfx_SetTextFGColor(16); // Green
@@ -83,7 +89,11 @@ bool init_menu(void)
 			break;
 
 		case kb_Down:
+#if UNDER_DEVELOPMENT
+			if (menu.option < 2)
+#else
 			if (menu.option < 3)
+#endif
 			{
 				menu.option++;
 			}
@@ -131,25 +141,6 @@ bool init_menu(void)
 
 	/* Free the temp sprite used for rendering */
 	free(temp_sprite);
-
-/* Prevent Players from playing game C */
-#if UNDER_DEVELOPMENT
-
-	if (menu.option == 3)
-	{
-		gfx_FillScreen(2);
-
-		gfx_PrintStringXY("Game C is still under development.", 0, 0);
-		gfx_PrintStringXY("Please check development page for updates!", 0, 10);
-		gfx_PrintStringXY("Press any key to exit.", 0, 30);
-		gfx_Blit(1);
-
-		delay(100);
-		while (!os_GetCSC());
-		return false;
-	}
-
-#endif
 
 	/* Start the game based on menu option */
 	init_duckhunt();
