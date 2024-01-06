@@ -53,9 +53,16 @@ void dog_SetMode(uint8_t mode)
 		break;
 
 	case DOG_LAUGH:
+		/* Set the costume to laugh */
 		dog.cnum = 12;
+
+		/* place the dog under the grass */
 		dog.y = 159;
+
+		/* Prepare to move via gotoY */
 		dog.gotoY = dog.y - 30;
+
+		/* Set the position of the dog in the center */
 		dog.x = (LCD_WIDTH - dog_laugh_1_width) / 2;
 		break;
 	}
@@ -162,7 +169,6 @@ static void dog_animate(void)
 	}
 }
 
-
 static void draw_back(void)
 {
 	gfx_sprite_t *temp = NULL;
@@ -221,7 +227,7 @@ void dog_Render(void)
 	{
 		draw_back();
 	}
- 
+
 	/* Draw the Sprite of the dog */
 	dog_animate();
 
@@ -246,12 +252,12 @@ void dog_Render(void)
 
 		/* reset transparent color */
 		gfx_SetTransparentColor(0);
-	} 
-	
+	}
+
 	if (dog.mode == DOG_PEEK_UP)
 	{
 		draw_grass();
-	} 
+	}
 }
 
 /**
@@ -341,12 +347,16 @@ void dog_Update(void)
 		/* Peek Up */
 		if (dog.tick == 1)
 		{
-
+			/* Check if the code is equal to it final gotoY position */
 			if (dog.y == dog.gotoY)
 			{
+				/* Animate the dog laughing  */
 				if (dog.mode == DOG_LAUGH)
+				{
+					/* Check if you can still animate `issue # 4` */
 					if (dog.animate < TIMER_ANIMATE_MAX)
 						break;
+				}
 
 				dog.tick++;
 				dog.gotoY = dog.y + 30;
@@ -357,13 +367,19 @@ void dog_Update(void)
 					delay(TIMER_ANIMATE_MAX * 50);
 				}
 			}
-			dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
+
+			/* Different Speeds for dog modes */
+			if (dog.mode == DOG_PEEK_UP) { 
+				dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed + 2);
+			} else { 
+				dog.y = Goto_Pos(dog.y, dog.gotoY, dog.speed);
+			}
+			
 		}
 
 		/* Peek Down */
 		if (dog.tick == 2)
 		{
-
 			if (dog.y == dog.gotoY)
 				dog.mode = DOG_HIDDEN;
 
