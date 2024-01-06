@@ -4,6 +4,7 @@
 #include <tice.h>
 #include <graphx.h>
 
+/* Actions of the ducks */
 enum DUCK_ACTIONS
 {
 	DUCK_SHOT = 1,

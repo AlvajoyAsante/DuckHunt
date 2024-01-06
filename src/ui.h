@@ -1,8 +1,13 @@
 #ifndef UI_H
 #define UI_H
 
-#define UNDER_DEVELOPMENT 1
+/* Version management */
 #define DUCKHUNT_VERSION "PRE-ALPHA"
+
+/* Used to manage hidden development */
+#define UNDER_DEVELOPMENT 1
+
+/* Manages the animation length */
 #define TIMER_ANIMATE_MAX 4
 
 /* Canvas Information */

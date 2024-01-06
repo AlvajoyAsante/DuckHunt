@@ -533,16 +533,22 @@ void update_enemies(void)
 {
 	uint8_t speed;
 
+	/* Check for the current game mode */
 	if (menu.option < 3)
-	{
+	{	
+		/* Check if the ducks are off screen*/
 		if (DUCK_FLYAWAY_TIMER == DUCK_FLYAWAY_MAX)
 		{
+			/* Force the dog into laugh mode */
 			if (dog.mode != DOG_LAUGH)
 			{
 				dog_SetMode(DOG_LAUGH);
 			}
-
+			
+			/* Prepare to render the dog */
 			draw_dog_buffer_layer();
+			
+			/* Update the dog until the dog mode is `DOG_HIDDEN` */
 			dog_Update();
 
 			if (dog.mode == DOG_HIDDEN)
@@ -686,7 +692,7 @@ void update_enemies(void)
 				/* Updating the X position */
 				if (enemies[i].x != enemies[i].gotoX)
 				{
-					speed = abs(enemies[i].gotoX - enemies[i].x) / (enemies[i].speed * 4);
+					speed = abs(enemies[i].gotoX - enemies[i].x) / (enemies[i].speed);
 
 					if (enemies[i].x < enemies[i].gotoX)
 					{
@@ -710,7 +716,8 @@ void update_enemies(void)
 				/* Updating the Y position  */
 				if (enemies[i].y != enemies[i].gotoY)
 				{
-					speed = abs(enemies[i].gotoY - enemies[i].y) / (enemies[i].speed * 2);
+
+					speed = abs(enemies[i].gotoY - enemies[i].y) / (enemies[i].speed);
 
 					if (enemies[i].y < enemies[i].gotoY)
 					{
@@ -723,17 +730,20 @@ void update_enemies(void)
 
 					/* Check is the y position is in radius of the destination postion */
 					if (abs(enemies[i].gotoY - enemies[i].y) <= (enemies[i].speed * 2))
+					{
 						enemies[i].y = enemies[i].gotoY;
+					}
 				}
 				else
 				{
 					// Check if the duck has been shot if not drop
-					enemies[i].angle = DUCK_FALLING;
+					if (enemies[i].x == enemies[i].gotoX)
+						enemies[i].angle = DUCK_FALLING;
 
 					// Change costume
 					enemies[i].cnum = 16;
 
-					enemies[i].speed = 8;
+					enemies[i].speed = 1;
 
 					// set new goto y
 					enemies[i].gotoY = 128;
@@ -891,8 +901,8 @@ void draw_enemies(void)
 			else
 			{
 				// Game C
-				// gfx_SetColor(0);
-				// gfx_Line(enemies[i].x, enemies[i].y, enemies[i].gotoX, enemies[i].gotoY);
+				gfx_SetColor(0);
+				gfx_Line(enemies[i].x, enemies[i].y, enemies[i].gotoX, enemies[i].gotoY);
 			}
 		}
 	}
@@ -968,26 +978,28 @@ void init_enemies(uint8_t amount)
 		else
 		{
 			/* Setting duck speed */
-			if (player.round >= 1 && player.round <= 10)
-			{
-				speed = 6;
-			}
-			else if (player.round >= 11 && player.round <= 12)
-			{
-				speed = 6;
-			}
-			else if (player.round >= 13 && player.round <= 14)
-			{
-				speed = 6;
-			}
-			else if (player.round >= 15 && player.round <= 19)
-			{
-				speed = 4;
-			}
-			else
-			{
-				speed = 2;
-			}
+			// if (player.round >= 1 && player.round <= 10)
+			// {
+			// 	speed = 2;
+			// }
+			// else if (player.round >= 11 && player.round <= 12)
+			// {
+			// 	speed = 3;
+			// }
+			// else if (player.round >= 13 && player.round <= 14)
+			// {
+			// 	speed = 4;
+			// }
+			// else if (player.round >= 15 && player.round <= 19)
+			// {
+			// 	speed = 5;
+			// }
+			// else
+			// {
+			// 	speed = 2;
+			// }
+
+			speed = 2;
 
 			enemies[i].speed = speed;
 			// Game C
